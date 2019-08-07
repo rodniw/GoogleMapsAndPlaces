@@ -247,16 +247,13 @@ public class MainActivity extends AppCompatActivity implements
             DocumentReference userRef = mDb.collection(getString(R.string.collection_users))
                     .document(FirebaseAuth.getInstance().getUid());
 
-            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful()){
-                        Log.d(TAG, "onComplete: successfully set the user client.");
-                        User user = task.getResult().toObject(User.class);
-                        mUserLocation.setUser(user);
-                        ((UserClient)(getApplicationContext())).setUser(user);
-                        getLastKnownLocation();
-                    }
+            userRef.get().addOnCompleteListener(task -> {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "onComplete: successfully set the user client.");
+                    User user = task.getResult().toObject(User.class);
+                    mUserLocation.setUser(user);
+                    ((UserClient)(getApplicationContext())).setUser(user);
+                    getLastKnownLocation();
                 }
             });
         }
@@ -336,10 +333,7 @@ public class MainActivity extends AppCompatActivity implements
     private void startLocationService(){
         if(!isLocationServiceRunning()){
             Intent serviceIntent = new Intent(this, LocationService.class);
-//        this.startService(serviceIntent);
-
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-
                 MainActivity.this.startForegroundService(serviceIntent);
             }else{
                 startService(serviceIntent);
@@ -350,7 +344,7 @@ public class MainActivity extends AppCompatActivity implements
     public boolean isServicesOK(){
         Log.d(TAG, "isServicesOK: checking google services version");
 
-        int available = Google ApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
 
         if(available == ConnectionResult.SUCCESS){
             //everything is fine and the user can make map requests
