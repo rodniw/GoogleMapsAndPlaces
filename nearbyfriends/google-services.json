@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "673232086841",
+    "firebase_url": "https://nearbyfriends-cb21a.firebaseio.com",
+    "project_id": "nearbyfriends-cb21a",
+    "storage_bucket": "nearbyfriends-cb21a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673232086841:android:f972c76ec1759418",
+        "android_client_info": {
+          "package_name": "dev.rodni.ru.googlemapsandplaces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673232086841-v2pngqjmu2gsa8fbe5065pa28e4qjgin.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU3rcKl6cKdv3NXvJiN0dqCYh0eq7A774"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673232086841-v2pngqjmu2gsa8fbe5065pa28e4qjgin.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
