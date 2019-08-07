@@ -3,6 +3,7 @@
 
 
     <!-- Strings related to login -->
+    <string name="api_key">AIzaSyBU3rcKl6cKdv3NXvJiN0dqCYh0eq7A774</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
