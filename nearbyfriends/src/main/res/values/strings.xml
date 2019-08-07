@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GoogleMaps2018</string>
+    <string name="app_name">Google Maps</string>
 
 
     <!-- Strings related to login -->
@@ -17,7 +17,7 @@
     <string name="register">Register</string>
     <string name="sign_in">Sign In</string>
     <string name="password">Password</string>
-    <string name="tabian_consulting_logo">Tabian Consulting Logo</string>
+    <string name="tabian_consulting_logo">Consulting Logo</string>
     <string name="email_registration">Email Registration</string>
     <string name="email">Email</string>
     <string name="confirm_password">Confirm Password</string>
