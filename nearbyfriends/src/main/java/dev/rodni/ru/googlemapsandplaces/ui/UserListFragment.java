@@ -44,6 +44,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<User> mUserList = new ArrayList<>();
     private UserRecyclerAdapter mUserRecyclerAdapter;
 
+    //simple static get instance method
     public static UserListFragment newInstance(){
         return new UserListFragment();
     }
@@ -63,6 +64,10 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         View view  = inflater.inflate(R.layout.fragment_user_list, container, false);
         mUserListRecyclerView = view.findViewById(R.id.user_list_recycler_view);
         mapView = view.findViewById(R.id.user_list_map);
+
+        //initialize the fragment's lifecycle observer and pass there the mapView
+        //to handle its lifecycle callback and reduce code boilerplate
+        //TODO: make this with dagger2
         lifecycleObserver = new UserListFragmentLifecycleObserver(mapView);
         getLifecycle().addObserver(lifecycleObserver);
 
@@ -73,6 +78,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+    //this method takes saved bundle and put the point onto the map at the saved place inside onCreateView method
     private void initGoogleMap(Bundle savedInstanceState) {
         Bundle mapViewBundle = null;
         //if we have info inside our bundle object then we will restore maps state
@@ -84,12 +90,14 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         mapView.getMapAsync(this);
     }
 
+    //simple init recycler view
     private void initUserListRecyclerView(){
         mUserRecyclerAdapter = new UserRecyclerAdapter(mUserList);
         mUserListRecyclerView.setAdapter(mUserRecyclerAdapter);
         mUserListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+    //here i save my location into the map
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -106,6 +114,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     //the method from the OnMapReadyCallback interface
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //checking for the location permission and if the user hasnt it then show his the access perm dialog
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -115,6 +124,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         googleMap.setMyLocationEnabled(true);
     }
 
+    //handle mapview when we have onLowMemory callback
     @Override
     public void onLowMemory() {
         super.onLowMemory();
