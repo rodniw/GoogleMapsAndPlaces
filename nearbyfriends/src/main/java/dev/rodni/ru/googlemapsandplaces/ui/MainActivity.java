@@ -71,7 +71,10 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView mChatroomRecyclerView;
     private ListenerRegistration mChatroomEventListener;
     private FirebaseFirestore mDb;
+
+    //the var for location permission
     private boolean mLocationPermissionGranted = false;
+
     private FusedLocationProviderClient mFusedLocationClient;
     private UserLocation mUserLocation;
 
@@ -140,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements
                 Log.d(TAG, "onEvent: number of chatrooms: " + mChatrooms.size());
                 mChatroomRecyclerAdapter.notifyDataSetChanged();
             }
-
         });
     }
 
@@ -205,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements
         navChatroomActivity(mChatrooms.get(position));
     }
 
+    //sign out
     private void signOut(){
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -237,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    //in this method we receive users uid(then to pojo) and by this we ask for the last known location
     private void getUserDetails(){
         if(mUserLocation == null){
             mUserLocation = new UserLocation();
@@ -258,9 +262,9 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    //in this location we get the last known users location, save it and then start to listen to it again
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation: called.");
-
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -278,8 +282,8 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    //we save users location into the firebase database
     private void saveUserLocation(){
-
         if(mUserLocation != null){
             DocumentReference locationRef = mDb
                     .collection(getString(R.string.collection_user_locations))
@@ -295,15 +299,18 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    //return true if we have all the permission granted and google play service available
     private boolean checkMapServices(){
         if(isServicesOK()){
             if(isMapsEnabled()){
                 return true;
             }
         }
+        //return false if some of our conditions doesn't match
         return false;
     }
 
+    //showing the dialog which asks to switch of the gps if it is off
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
@@ -316,9 +323,11 @@ public class MainActivity extends AppCompatActivity implements
         alert.show();
     }
 
+    //this method checks for gps provider availability
     public boolean isMapsEnabled(){
         final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
+        //if gps is off we show the dialog which asks to switch it on
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
             buildAlertMessageNoGps();
             return false;
@@ -326,9 +335,12 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
+    //start our location listening service by the intent
+    //if the user doesnt have already runnable location service
     private void startLocationService(){
         if(!isLocationServiceRunning()){
             Intent serviceIntent = new Intent(this, LocationService.class);
+            //check for the android version to decide to start foreground service of temporary service
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
                 MainActivity.this.startForegroundService(serviceIntent);
             }else{
@@ -337,6 +349,9 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    //this method checks if the user has some connection with google play services
+    //return true if he has the connection, return false is the user has not
+    //shows the dialog if its available to fix this connection
     public boolean isServicesOK(){
         Log.d(TAG, "isServicesOK: checking google services version");
 
@@ -358,18 +373,25 @@ public class MainActivity extends AppCompatActivity implements
         return false;
     }
 
+    //this method check if we have our service running at the moment
     private boolean isLocationServiceRunning() {
+        //getting activity manager to check our running services
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            //return true if we have our service in the list of all services
             if("dev.rodni.ru.services.LocationService".equals(service.service.getClassName())) {
                 Log.d(TAG, "isLocationServiceRunning: location service is already running.");
                 return true;
             }
         }
         Log.d(TAG, "isLocationServiceRunning: location service is not running.");
+        //return false if we didnot find our service in the list of running services
         return false;
     }
 
+    //checking if we have location permission
+    //then we can get the list of our chat room by getChatrooms() method
+    //and get the user's info by the getUserDetails() method that will fill UserLocation model class
     private void getLocationPermission() {
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -384,6 +406,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    //asking for the location permission from the system
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         mLocationPermissionGranted = false;
@@ -398,6 +421,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    //getting the result of permission dialog
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -424,15 +448,20 @@ public class MainActivity extends AppCompatActivity implements
         mProgressBar.setVisibility(View.GONE);
     }
 
+    //inside of the onResume we
     @Override
     protected void onResume() {
         super.onResume();
+        //this check for permission granted and gps provider availability
         if(checkMapServices()){
+            //check for location permission
             if(mLocationPermissionGranted){
+                //getting the chat rooms and the last known location
                 getChatrooms();
                 getUserDetails();
             }
             else{
+                //if we dont have the permission lets ask for it
                 getLocationPermission();
             }
         }
@@ -441,6 +470,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //if the user ve been listening for the chat rooms(in all the permissions success case)
+        //then we disconnect from this listening when the activity is destroying
         if(mChatroomEventListener != null){
             mChatroomEventListener.remove();
         }

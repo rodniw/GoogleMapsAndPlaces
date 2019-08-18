@@ -8,6 +8,7 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
+//this class is parcelable because we need to pass this between the activities
 public class UserLocation implements Parcelable{
 
     private User user;
