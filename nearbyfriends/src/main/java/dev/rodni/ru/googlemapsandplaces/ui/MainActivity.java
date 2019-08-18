@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -81,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements
     private boolean mLocationPermissionGranted = false;
 
     //for location
-    private FusedLocationProviderClient mFusedLocationClient;
-    private UserLocation mUserLocation;
+    private FusedLocationProviderClient fusedLocationClient;
+    private UserLocation userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity implements
         mChatroomRecyclerView = findViewById(R.id.chatrooms_recycler_view);
 
         findViewById(R.id.fab_create_chatroom).setOnClickListener(this);
+
+        //initialize fused location client from the system services
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         mDb = FirebaseFirestore.getInstance();
 
@@ -265,8 +269,8 @@ public class MainActivity extends AppCompatActivity implements
     private void getUserDetails(){
         Log.d(TAG, "getUserDetails: ");
         
-        if(mUserLocation == null){
-            mUserLocation = new UserLocation();
+        if(userLocation == null){
+            userLocation = new UserLocation();
             DocumentReference userRef = mDb.collection(getString(R.string.collection_users))
                     .document(FirebaseAuth.getInstance().getUid());
 
@@ -274,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements
                 if(task.isSuccessful()){
                     Log.d(TAG, "onComplete: successfully set the user client.");
                     User user = task.getResult().toObject(User.class);
-                    mUserLocation.setUser(user);
+                    userLocation.setUser(user);
                     ((UserClient)(getApplicationContext())).setUser(user);
                     getLastKnownLocation();
                 }
@@ -293,16 +297,16 @@ public class MainActivity extends AppCompatActivity implements
             return;
         }
 
-        //mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-        //    if (task.isSuccessful()) {
-        //        Location location = task.getResult();
-        //        GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-        //        mUserLocation.setGeo_point(geoPoint);
-        //        mUserLocation.setTimestamp(null);
-        //        saveUserLocation();
-        //        startLocationService();
-        //    }
-        //});
+        fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Location location = task.getResult();
+                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                userLocation.setGeo_point(geoPoint);
+                userLocation.setTimestamp(null);
+                saveUserLocation();
+                startLocationService();
+            }
+        });
 
     }
 
@@ -310,16 +314,16 @@ public class MainActivity extends AppCompatActivity implements
     private void saveUserLocation(){
         Log.d(TAG, "saveUserLocation: ");
         
-        if(mUserLocation != null){
+        if(userLocation != null){
             DocumentReference locationRef = mDb
                     .collection(getString(R.string.collection_user_locations))
                     .document(FirebaseAuth.getInstance().getUid());
 
-            locationRef.set(mUserLocation).addOnCompleteListener(task -> {
+            locationRef.set(userLocation).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     Log.d(TAG, "saveUserLocation: \ninserted user location into database." +
-                            "\n latitude: " + mUserLocation.getGeo_point().getLatitude() +
-                            "\n longitude: " + mUserLocation.getGeo_point().getLongitude());
+                            "\n latitude: " + userLocation.getGeo_point().getLatitude() +
+                            "\n longitude: " + userLocation.getGeo_point().getLongitude());
                 }
             });
         }
