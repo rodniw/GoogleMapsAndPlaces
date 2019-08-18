@@ -68,9 +68,6 @@
                     android:background="@drawable/theme_button"/>
 
             </RelativeLayout>
-
-
-
         </RelativeLayout>
     </ScrollView>
 

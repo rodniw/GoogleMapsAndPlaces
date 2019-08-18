@@ -31,8 +31,6 @@
                 android:layout_height="match_parent"
                 android:id="@+id/user_list_map" />
         </RelativeLayout>
-
-
     </LinearLayout>
 
     <ProgressBar
