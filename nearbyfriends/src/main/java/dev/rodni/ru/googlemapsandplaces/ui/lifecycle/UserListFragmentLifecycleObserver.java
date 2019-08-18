@@ -22,27 +22,27 @@ public class UserListFragmentLifecycleObserver implements LifecycleObserver {
     }
 
     @OnLifecycleEvent(ON_START)
-    void startMapView(LifecycleOwner owner, Lifecycle.Event event) {
+    void startMapView(LifecycleOwner owner) {
         map.onStart();
     }
 
     @OnLifecycleEvent(ON_RESUME)
-    void resumeMapView(LifecycleOwner owner, Lifecycle.Event event) {
+    void resumeMapView(LifecycleOwner owner) {
         map.onResume();
     }
 
     @OnLifecycleEvent(ON_PAUSE)
-    void pauseMapView(LifecycleOwner owner, Lifecycle.Event event) {
+    void pauseMapView(LifecycleOwner owner) {
         map.onPause();
     }
 
     @OnLifecycleEvent(ON_STOP)
-    void stopMapView(LifecycleOwner owner, Lifecycle.Event event) {
+    void stopMapView(LifecycleOwner owner) {
         map.onStop();
     }
 
     @OnLifecycleEvent(ON_DESTROY)
-    void destroyMapView(LifecycleOwner owner, Lifecycle.Event event) {
+    void destroyMapView(LifecycleOwner owner) {
         map.onDestroy();
     }
 

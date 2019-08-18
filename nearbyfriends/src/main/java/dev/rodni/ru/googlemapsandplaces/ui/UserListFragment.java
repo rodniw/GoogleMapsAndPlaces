@@ -54,8 +54,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         if(getArguments() != null){
             mUserList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
         }
-        lifecycleObserver = new UserListFragmentLifecycleObserver(mapView);
-        getLifecycle().addObserver(lifecycleObserver);
+
     }
 
     @Nullable
@@ -64,6 +63,9 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         View view  = inflater.inflate(R.layout.fragment_user_list, container, false);
         mUserListRecyclerView = view.findViewById(R.id.user_list_recycler_view);
         mapView = view.findViewById(R.id.user_list_map);
+        lifecycleObserver = new UserListFragmentLifecycleObserver(mapView);
+        getLifecycle().addObserver(lifecycleObserver);
+
         initUserListRecyclerView();
 
         initGoogleMap(savedInstanceState);

@@ -292,16 +292,17 @@ public class MainActivity extends AppCompatActivity implements
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Location location = task.getResult();
-                GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                mUserLocation.setGeo_point(geoPoint);
-                mUserLocation.setTimestamp(null);
-                saveUserLocation();
-                startLocationService();
-            }
-        });
+
+        //mFusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+        //    if (task.isSuccessful()) {
+        //        Location location = task.getResult();
+        //        GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+        //        mUserLocation.setGeo_point(geoPoint);
+        //        mUserLocation.setTimestamp(null);
+        //        saveUserLocation();
+        //        startLocationService();
+        //    }
+        //});
 
     }
 
