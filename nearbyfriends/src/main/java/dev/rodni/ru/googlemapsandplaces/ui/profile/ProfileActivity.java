@@ -13,17 +13,19 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import javax.inject.Inject;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.UserClient;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.IProfile;
 import dev.rodni.ru.googlemapsandplaces.ui.avaterpicker.ImageListFragment;
 
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, IProfile {
-
     private static final String TAG = "ProfileActivity";
+
+    @Inject User userApp;
 
     //widgets
     private CircleImageView mAvatarImage;
@@ -52,7 +54,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         int avatar = 0;
         try{
-            avatar = Integer.parseInt(((UserClient)getApplicationContext()).getUser().getAvatar());
+            //avatar = Integer.parseInt(((UserClient)getApplicationContext()).getUser().getAvatar());
+            avatar = Integer.parseInt(userApp.getAvatar());
         }catch (NumberFormatException e){
             Log.e(TAG, "retrieveProfileImage: no avatar image. Setting default. " + e.getMessage() );
         }
@@ -108,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 .into(mAvatarImage);
 
         // update the client and database
-        User user = ((UserClient)getApplicationContext()).getUser();
+        User user = userApp;
         user.setAvatar(String.valueOf(resource));
 
         FirebaseFirestore.getInstance()

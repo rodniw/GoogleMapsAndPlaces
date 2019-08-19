@@ -44,8 +44,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.UserClient;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
@@ -61,8 +62,9 @@ import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUES
 
 public class MainActivity extends AppCompatActivity implements
         View.OnClickListener, ChatroomRecyclerAdapter.ChatroomRecyclerClickListener {
-
     private static final String TAG = "MainActivity";
+
+    @Inject User userApp;
 
     //view
     private ProgressBar mProgressBar;
@@ -281,7 +283,8 @@ public class MainActivity extends AppCompatActivity implements
                     Log.d(TAG, "onComplete: successfully set the user client.");
                     User user = task.getResult().toObject(User.class);
                     userLocation.setUser(user);
-                    ((UserClient)(getApplicationContext())).setUser(user);
+                    //((UserClient)(getApplicationContext())).setUser(user);
+                    userApp = user;
                     getLastKnownLocation();
                 }
             });

@@ -28,14 +28,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 
+import javax.inject.Inject;
+
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.UserClient;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 
 public class LocationService extends Service {
-
     private static final String TAG = "LocationService";
+
+    @Inject User userApp;
 
     private FusedLocationProviderClient mFusedLocationClient;
     private final static long UPDATE_INTERVAL = 4 * 1000;  /* 4 secs */
@@ -100,9 +102,9 @@ public class LocationService extends Service {
                         Location location = locationResult.getLastLocation();
 
                         if (location != null) {
-                            User user = ((UserClient)(getApplicationContext())).getUser();
+                            //User user = ((UserClient)(getApplicationContext())).getUser();
                             GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
-                            UserLocation userLocation = new UserLocation(user, geoPoint, null);
+                            UserLocation userLocation = new UserLocation(userApp, geoPoint, null);
                             saveUserLocation(userLocation);
                         }
                     }

@@ -17,8 +17,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import javax.inject.Inject;
+
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.UserClient;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.main.MainActivity;
@@ -27,6 +28,8 @@ import static android.text.TextUtils.isEmpty;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
+
+    @Inject User userApp;
 
     //Firebase
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -89,8 +92,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userRef.get().addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         Log.d(TAG, "onComplete: successfully set the user client.");
-                        User user1 = task.getResult().toObject(User.class);
-                        ((UserClient)(getApplicationContext())).setUser(user1);
+                        userApp = (task.getResult().toObject(User.class));
+                        //User user = task.getResult().toObject(User.class);
+                        //((UserClient)(getApplicationContext())).setUser(user1);
                     }
                 });
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);

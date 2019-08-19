@@ -28,8 +28,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.UserClient;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.ChatMessage;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
@@ -39,6 +40,8 @@ import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
 //TODO: refactor this activity to a fragment and use di, mvvm
 public class ChatroomActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "ChatroomActivity";
+
+    @Inject User userApp;
 
     //parcelable model class of the chatroom
     private Chatroom chatroom;
@@ -195,9 +198,9 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
             newChatMessage.setMessage(message);
             newChatMessage.setMessage_id(newMessageDoc.getId());
 
-            User user = ((UserClient)(getApplicationContext())).getUser();
-            Log.d(TAG, "insertNewMessage: retrieved user client: " + user.toString());
-            newChatMessage.setUser(user);
+            //User user = ((UserClient)(getApplicationContext())).getUser();
+            Log.d(TAG, "insertNewMessage: retrieved user client: " + userApp.toString());
+            newChatMessage.setUser(userApp);
 
             newMessageDoc.set(newChatMessage).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
@@ -264,8 +267,8 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
                 .collection(getString(R.string.collection_chatroom_user_list))
                 .document(FirebaseAuth.getInstance().getUid());
 
-        User user = ((UserClient)(getApplicationContext())).getUser();
-        joinChatroomRef.set(user); // Don't care about listening for completion.
+        //User user = ((UserClient)(getApplicationContext())).getUser();
+        joinChatroomRef.set(userApp); // Don't care about listening for completion.
     }
 
     //setting the action bar with the name of the chat
