@@ -3,6 +3,8 @@ package dev.rodni.ru.googlemapsandplaces.models;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+
 public class ClusterMarker implements ClusterItem {
 
     private LatLng position; // required field

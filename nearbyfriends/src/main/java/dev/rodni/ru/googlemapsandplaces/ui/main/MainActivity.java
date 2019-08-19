@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui;
+package dev.rodni.ru.googlemapsandplaces.ui.main;
 
 import android.Manifest;
 import android.app.ActivityManager;
@@ -46,11 +46,13 @@ import java.util.Set;
 
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.UserClient;
-import dev.rodni.ru.googlemapsandplaces.adapters.ChatroomRecyclerAdapter;
-import dev.rodni.ru.googlemapsandplaces.models.Chatroom;
-import dev.rodni.ru.googlemapsandplaces.models.User;
-import dev.rodni.ru.googlemapsandplaces.models.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.services.LocationService;
+import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileActivity;
 
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.ERROR_DIALOG_REQUEST;
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;

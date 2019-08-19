@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.adapters;
+package dev.rodni.ru.googlemapsandplaces.ui.main;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.Chatroom;
+import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
 
 public class ChatroomRecyclerAdapter extends RecyclerView.Adapter<ChatroomRecyclerAdapter.ViewHolder>{
 

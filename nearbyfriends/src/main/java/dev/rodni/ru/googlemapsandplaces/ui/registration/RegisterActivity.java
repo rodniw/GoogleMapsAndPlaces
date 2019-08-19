@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui;
+package dev.rodni.ru.googlemapsandplaces.ui.registration;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
 
 import static android.text.TextUtils.isEmpty;
 import static dev.rodni.ru.googlemapsandplaces.util.Check.doStringsMatch;

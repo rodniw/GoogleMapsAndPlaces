@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui;
+package dev.rodni.ru.googlemapsandplaces.ui.chatroom;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,20 +9,16 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -34,11 +30,11 @@ import java.util.Set;
 
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.UserClient;
-import dev.rodni.ru.googlemapsandplaces.adapters.ChatMessageRecyclerAdapter;
-import dev.rodni.ru.googlemapsandplaces.models.ChatMessage;
-import dev.rodni.ru.googlemapsandplaces.models.Chatroom;
-import dev.rodni.ru.googlemapsandplaces.models.User;
-import dev.rodni.ru.googlemapsandplaces.models.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.models.chatdata.ChatMessage;
+import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
 
 //TODO: refactor this activity to a fragment and use di, mvvm
 public class ChatroomActivity extends AppCompatActivity implements View.OnClickListener {
@@ -226,7 +222,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
         UserListFragment fragment = UserListFragment.newInstance();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(getString(R.string.intent_user_list), usersList);
-        bundle.putParcelableArrayList(getString(R.string.intent_user_list), userLocations);
+        bundle.putParcelableArrayList(getString(R.string.intent_user_locations), userLocations);
         fragment.setArguments(bundle);
 
         //switching to the UserListFragment with transaction and animation with the bundled instance of the fragment
@@ -251,7 +247,6 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void leaveChatroom(){
-
         DocumentReference joinChatroomRef = firestoreInstance
                 .collection(getString(R.string.collection_chatrooms))
                 .document(chatroom.getChatroom_id())

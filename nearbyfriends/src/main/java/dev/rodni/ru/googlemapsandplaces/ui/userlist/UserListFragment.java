@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui;
+package dev.rodni.ru.googlemapsandplaces.ui.userlist;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -20,12 +20,11 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.adapters.UserRecyclerAdapter;
-import dev.rodni.ru.googlemapsandplaces.models.User;
-import dev.rodni.ru.googlemapsandplaces.models.UserLocation;
-import dev.rodni.ru.googlemapsandplaces.ui.lifecycle.UserListFragmentLifecycleObserver;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.MAPVIEW_BUNDLE_KEY;
 
@@ -42,9 +41,11 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     //lifecycler observer
     private UserListFragmentLifecycleObserver lifecycleObserver;
 
-    //vars
-    private ArrayList<User> usersList = new ArrayList<>();
-    private ArrayList<UserLocation> usersLocationsList = new ArrayList<>();
+    //lists
+    private List<User> usersList = new ArrayList<>();
+    private List<UserLocation> usersLocationsList = new ArrayList<>();
+
+    //recycler adapter
     private UserRecyclerAdapter userRecyclerAdapter;
 
     //simple static get instance method
@@ -57,9 +58,8 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
             usersList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
-            usersLocationsList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
+            usersLocationsList = getArguments().getParcelableArrayList(getString(R.string.intent_user_locations));
         }
-
     }
 
     @Nullable
@@ -80,14 +80,14 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         initGoogleMap(savedInstanceState);
 
         //checking the list of user's locations
-        for (UserLocation userlocation : usersLocationsList) {
-            Log.d(TAG, "onCreateView: user location " + userlocation.getUser().getUsername());
-            Log.d(TAG,
-                    "onCreateView: user geopoint " +
-                            userlocation.getGeo_point().getLatitude() +
-                            "\n" +
-                            userlocation.getGeo_point().getLongitude());
-        }
+        //for (UserLocation userlocation : usersLocationsList) {
+        //    Log.d(TAG, "onCreateView: user location " + userlocation.getUser().getUsername());
+        //    Log.d(TAG,
+        //            "onCreateView: user geopoint " +
+        //                    userlocation.getGeo_point().getLatitude() +
+        //                    "\n" +
+        //                    userlocation.getGeo_point().getLongitude());
+        //}
 
         return view;
     }

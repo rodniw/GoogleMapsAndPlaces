@@ -2,7 +2,7 @@ package dev.rodni.ru.googlemapsandplaces;
 
 import android.app.Application;
 
-import dev.rodni.ru.googlemapsandplaces.models.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 
 
 public class UserClient extends Application {

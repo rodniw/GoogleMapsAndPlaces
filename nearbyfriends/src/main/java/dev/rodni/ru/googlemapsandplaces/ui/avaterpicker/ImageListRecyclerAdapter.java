@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.adapters;
+package dev.rodni.ru.googlemapsandplaces.ui.avaterpicker;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -40,8 +40,8 @@ public class ImageListRecyclerAdapter extends RecyclerView.Adapter<ImageListRecy
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.cwm_logo)
-                .error(R.drawable.cwm_logo);
+                .placeholder(R.drawable.cartman_cop)
+                .error(R.drawable.cartman_cop);
 
         Glide.with(mContext)
                 .setDefaultRequestOptions(requestOptions)

@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui;
+package dev.rodni.ru.googlemapsandplaces.ui.avaterpicker;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import java.util.ArrayList;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.adapters.ImageListRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.IProfile;
 
 public class ImageListFragment extends Fragment implements ImageListRecyclerAdapter.ImageListRecyclerClickListener{
 
@@ -47,7 +47,6 @@ public class ImageListFragment extends Fragment implements ImageListRecyclerAdap
     }
 
     private void getImageResouces(){
-        mImageResources.add(R.drawable.cwm_logo);
         mImageResources.add(R.drawable.cartman_cop);
         mImageResources.add(R.drawable.eric_cartman);
         mImageResources.add(R.drawable.ike);

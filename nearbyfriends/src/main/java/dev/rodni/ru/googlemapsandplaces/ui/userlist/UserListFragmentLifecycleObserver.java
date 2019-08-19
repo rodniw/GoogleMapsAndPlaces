@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui.lifecycle;
+package dev.rodni.ru.googlemapsandplaces.ui.userlist;
 
 import android.util.Log;
 

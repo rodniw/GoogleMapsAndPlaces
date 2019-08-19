@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.adapters;
+package dev.rodni.ru.googlemapsandplaces.ui.chatroom;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,8 +15,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.ChatMessage;
-import dev.rodni.ru.googlemapsandplaces.models.User;
+import dev.rodni.ru.googlemapsandplaces.models.chatdata.ChatMessage;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 
 public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>{
 

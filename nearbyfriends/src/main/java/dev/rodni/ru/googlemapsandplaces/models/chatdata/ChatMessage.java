@@ -1,8 +1,10 @@
-package dev.rodni.ru.googlemapsandplaces.models;
+package dev.rodni.ru.googlemapsandplaces.models.chatdata;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
+
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 
 public class ChatMessage {
 

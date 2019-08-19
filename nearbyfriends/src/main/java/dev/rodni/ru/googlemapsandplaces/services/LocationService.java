@@ -30,8 +30,8 @@ import com.google.firebase.firestore.GeoPoint;
 
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.UserClient;
-import dev.rodni.ru.googlemapsandplaces.models.User;
-import dev.rodni.ru.googlemapsandplaces.models.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 
 public class LocationService extends Service {
 

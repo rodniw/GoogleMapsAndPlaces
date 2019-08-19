@@ -1,5 +1,6 @@
-package dev.rodni.ru.googlemapsandplaces.adapters;
+package dev.rodni.ru.googlemapsandplaces.ui.userlist;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,17 +9,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 
 public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapter.ViewHolder>{
+    private static final String TAG = "UserRecyclerAdapter";
 
-    private ArrayList<User> mUsers;
+    private List<User> users;
 
-    public UserRecyclerAdapter(ArrayList<User> users) {
-        this.mUsers = users;
+    public UserRecyclerAdapter(List<User> users) {
+        Log.d(TAG, "UserRecyclerAdapter: " + users.toString());
+        this.users = users;
     }
 
     @NonNull
@@ -31,13 +34,13 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        (holder).username.setText(mUsers.get(position).getUsername());
-        (holder).email.setText(mUsers.get(position).getEmail());
+        (holder).username.setText(users.get(position).getUsername());
+        (holder).email.setText(users.get(position).getEmail());
     }
 
     @Override
     public int getItemCount() {
-        return mUsers.size();
+        return users.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

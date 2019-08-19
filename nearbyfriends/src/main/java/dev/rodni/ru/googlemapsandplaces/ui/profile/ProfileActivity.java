@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui;
+package dev.rodni.ru.googlemapsandplaces.ui.profile;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +16,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.UserClient;
-import dev.rodni.ru.googlemapsandplaces.models.User;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.ui.IProfile;
+import dev.rodni.ru.googlemapsandplaces.ui.avaterpicker.ImageListFragment;
 
 
 public class ProfileActivity extends AppCompatActivity implements View.OnClickListener, IProfile {
@@ -45,8 +47,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void retrieveProfileImage(){
         RequestOptions requestOptions = new RequestOptions()
-                .error(R.drawable.cwm_logo)
-                .placeholder(R.drawable.cwm_logo);
+                .error(R.drawable.cartman_cop)
+                .placeholder(R.drawable.cartman_cop);
 
         int avatar = 0;
         try{
@@ -97,8 +99,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         // display the image
         RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.cwm_logo)
-                .error(R.drawable.cwm_logo);
+                .placeholder(R.drawable.cartman_cop)
+                .error(R.drawable.cartman_cop);
 
         Glide.with(this)
                 .setDefaultRequestOptions(requestOptions)
