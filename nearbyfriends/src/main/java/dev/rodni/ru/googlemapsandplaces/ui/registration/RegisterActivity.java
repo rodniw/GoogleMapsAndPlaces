@@ -18,6 +18,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import javax.inject.Inject;
+
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
@@ -27,6 +29,8 @@ import static dev.rodni.ru.googlemapsandplaces.util.Check.doStringsMatch;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "RegisterActivity";
+
+    @Inject User userApp;
 
     //widgets
     private EditText mEmail, mPassword, mConfirmPassword;
@@ -63,10 +67,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         Log.d(TAG, "onComplete: AuthState: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                         //insert some default data
-                        User user = new User();
-                        user.setEmail(email);
-                        user.setUsername(email.substring(0, email.indexOf("@")));
-                        user.setUser_id(FirebaseAuth.getInstance().getUid());
+                        userApp.setEmail(email);
+                        userApp.setUsername(email.substring(0, email.indexOf("@")));
+                        userApp.setUser_id(FirebaseAuth.getInstance().getUid());
 
                         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                                 .setTimestampsInSnapshotsEnabled(true)
@@ -77,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 .collection(getString(R.string.collection_users))
                                 .document(FirebaseAuth.getInstance().getUid());
 
-                        newUserRef.set(user).addOnCompleteListener(task1 -> {
+                        newUserRef.set(userApp).addOnCompleteListener(task1 -> {
                             hideDialog();
 
                             if(task1.isSuccessful()){

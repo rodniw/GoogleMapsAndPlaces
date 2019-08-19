@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements
 
         initSupportActionBar();
         initChatroomRecyclerView();
+
+        Toast.makeText(this, "User: " + userApp.getAvatar(), Toast.LENGTH_LONG).show();
     }
 
     //work with the action bar
@@ -281,10 +283,10 @@ public class MainActivity extends AppCompatActivity implements
             userRef.get().addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     Log.d(TAG, "onComplete: successfully set the user client.");
-                    User user = task.getResult().toObject(User.class);
-                    userLocation.setUser(user);
+                    userApp = task.getResult().toObject(User.class);
+                    userLocation.setUser(userApp);
                     //((UserClient)(getApplicationContext())).setUser(user);
-                    userApp = user;
+                    //userApp = user;
                     getLastKnownLocation();
                 }
             });

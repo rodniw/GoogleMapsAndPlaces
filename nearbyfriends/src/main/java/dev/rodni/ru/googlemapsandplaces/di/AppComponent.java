@@ -9,6 +9,7 @@ import dagger.Component;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
+import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 
 //the main comp
 @Singleton

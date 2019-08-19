@@ -92,7 +92,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userRef.get().addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         Log.d(TAG, "onComplete: successfully set the user client.");
-                        userApp = (task.getResult().toObject(User.class));
+                        User user1 = (task.getResult().toObject(User.class));
+
+                        userApp.setAvatar(user1.getAvatar());
+                        userApp.setEmail(user1.getEmail());
+                        userApp.setUser_id(user1.getUser_id());
+                        userApp.setUsername(user1.getUsername());
                         //User user = task.getResult().toObject(User.class);
                         //((UserClient)(getApplicationContext())).setUser(user1);
                     }
