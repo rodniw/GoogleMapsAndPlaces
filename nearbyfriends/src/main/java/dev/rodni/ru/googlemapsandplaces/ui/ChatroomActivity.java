@@ -7,17 +7,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -33,35 +38,47 @@ import dev.rodni.ru.googlemapsandplaces.adapters.ChatMessageRecyclerAdapter;
 import dev.rodni.ru.googlemapsandplaces.models.ChatMessage;
 import dev.rodni.ru.googlemapsandplaces.models.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.models.User;
+import dev.rodni.ru.googlemapsandplaces.models.UserLocation;
 
+//TODO: refactor this activity to a fragment and use di, mvvm
 public class ChatroomActivity extends AppCompatActivity implements View.OnClickListener {
-
     private static final String TAG = "ChatroomActivity";
 
-    //widgets
-    private Chatroom mChatroom;
-    private EditText mMessage;
+    //parcelable model class of the chatroom
+    private Chatroom chatroom;
 
-    //vars
-    private ListenerRegistration mChatMessageEventListener, mUserListEventListener;
-    private RecyclerView mChatMessageRecyclerView;
-    private ChatMessageRecyclerAdapter mChatMessageRecyclerAdapter;
-    private FirebaseFirestore mDb;
-    private ArrayList<ChatMessage> mMessages = new ArrayList<>();
-    private Set<String> mMessageIds = new HashSet<>();
-    private ArrayList<User> mUserList = new ArrayList<>();
+    //view
+    private EditText messageEditText;
+
+    //recycler view and adapter
+    private RecyclerView chatMessageRecyclerView;
+    private ChatMessageRecyclerAdapter chatMessageRecyclerAdapter;
+
+    //firebase dependencies
+    private ListenerRegistration chatMessageEventListener, userListEventListener;
+    private FirebaseFirestore firestoreInstance;
+
+    //lists for messages, its id's, users, user's locations
+    private ArrayList<ChatMessage> chatMessages = new ArrayList<>();
+    private Set<String> messageIds = new HashSet<>();
+    private ArrayList<User> usersList = new ArrayList<>();
+    private ArrayList<UserLocation> userLocations = new ArrayList<>();
+
+    //fragment which shows the list of users in this chat
     private UserListFragment mUserListFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chatroom);
-        mMessage = findViewById(R.id.input_message);
-        mChatMessageRecyclerView = findViewById(R.id.chatmessage_recycler_view);
 
+        //init views
+        setContentView(R.layout.activity_chatroom);
+        messageEditText = findViewById(R.id.input_message);
+        chatMessageRecyclerView = findViewById(R.id.chatmessage_recycler_view);
         findViewById(R.id.checkmark).setOnClickListener(this);
 
-        mDb = FirebaseFirestore.getInstance();
+        //init firestore
+        firestoreInstance = FirebaseFirestore.getInstance();
 
         getIncomingIntent();
         initChatroomRecyclerView();
@@ -70,12 +87,12 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
 
     private void getChatMessages(){
 
-        CollectionReference messagesRef = mDb
+        CollectionReference messagesRef = firestoreInstance
                 .collection(getString(R.string.collection_chatrooms))
-                .document(mChatroom.getChatroom_id())
+                .document(chatroom.getChatroom_id())
                 .collection(getString(R.string.collection_chat_messages));
 
-        mChatMessageEventListener = messagesRef
+        chatMessageEventListener = messagesRef
                 .orderBy("timestamp", Query.Direction.ASCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
@@ -87,26 +104,26 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
 
                             ChatMessage message = doc.toObject(ChatMessage.class);
-                            if(!mMessageIds.contains(message.getMessage_id())){
-                                mMessageIds.add(message.getMessage_id());
-                                mMessages.add(message);
-                                mChatMessageRecyclerView.smoothScrollToPosition(mMessages.size() - 1);
+                            if(!messageIds.contains(message.getMessage_id())){
+                                messageIds.add(message.getMessage_id());
+                                chatMessages.add(message);
+                                chatMessageRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
                             }
 
                         }
-                        mChatMessageRecyclerAdapter.notifyDataSetChanged();
+                        chatMessageRecyclerAdapter.notifyDataSetChanged();
                     }
                 });
     }
 
     private void getChatroomUsers(){
 
-        CollectionReference usersRef = mDb
+        CollectionReference usersRef = firestoreInstance
                 .collection(getString(R.string.collection_chatrooms))
-                .document(mChatroom.getChatroom_id())
+                .document(chatroom.getChatroom_id())
                 .collection(getString(R.string.collection_chatroom_user_list));
 
-        mUserListEventListener = usersRef
+        userListEventListener = usersRef
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         Log.e(TAG, "onEvent: Listen failed.", e);
@@ -114,29 +131,50 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
                     }
                     if(queryDocumentSnapshots != null){
                         // Clear the list and add all the users again
-                        mUserList.clear();
-                        mUserList = new ArrayList<>();
+                        usersList.clear();
+                        usersList = new ArrayList<>();
 
                         for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                             User user = doc.toObject(User.class);
-                            mUserList.add(user);
+                            usersList.add(user);
+                            try {
+                                getUserLocation(user);
+                            } catch (NullPointerException exception) {
+                                Toast.makeText(this, "An error occured: " + exception, Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        Log.d(TAG, "onEvent: user list size: " + mUserList.size());
+                        Log.d(TAG, "onEvent: user list size: " + usersList.size());
                     }
                 });
     }
 
-    private void initChatroomRecyclerView(){
-        mChatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(mMessages, new ArrayList<User>(), this);
-        mChatMessageRecyclerView.setAdapter(mChatMessageRecyclerAdapter);
-        mChatMessageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    //this method inflates the list of other user's locations
+    private void getUserLocation(User user) throws NullPointerException {
+        //fetching from the User Locations collection other users by their Ids
+        DocumentReference locationRef = firestoreInstance.collection(getString(R.string.collection_user_locations))
+                .document(user.getUser_id());
 
-        mChatMessageRecyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+        //inflating the list of user's location with the help of UserLocation pojo class from firestore
+        locationRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().toObject(UserLocation.class) != null) {
+                    userLocations.add(task.getResult().toObject(UserLocation.class));
+                }
+            }
+        });
+    }
+
+    private void initChatroomRecyclerView(){
+        chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(chatMessages, new ArrayList<User>(), this);
+        chatMessageRecyclerView.setAdapter(chatMessageRecyclerAdapter);
+        chatMessageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        chatMessageRecyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
-                mChatMessageRecyclerView.postDelayed(() -> {
-                    if(mMessages.size() > 0){
-                        mChatMessageRecyclerView.smoothScrollToPosition(
-                                mChatMessageRecyclerView.getAdapter().getItemCount() - 1);
+                chatMessageRecyclerView.postDelayed(() -> {
+                    if(chatMessages.size() > 0){
+                        chatMessageRecyclerView.smoothScrollToPosition(
+                                chatMessageRecyclerView.getAdapter().getItemCount() - 1);
                     }
                 }, 100);
             }
@@ -146,14 +184,14 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void insertNewMessage(){
-        String message = mMessage.getText().toString();
+        String message = messageEditText.getText().toString();
 
         if(!message.equals("")){
             message = message.replaceAll(System.getProperty("line.separator"), "");
 
-            DocumentReference newMessageDoc = mDb
+            DocumentReference newMessageDoc = firestoreInstance
                     .collection(getString(R.string.collection_chatrooms))
-                    .document(mChatroom.getChatroom_id())
+                    .document(chatroom.getChatroom_id())
                     .collection(getString(R.string.collection_chat_messages))
                     .document();
 
@@ -177,17 +215,21 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void clearMessage(){
-        mMessage.setText("");
+        messageEditText.setText("");
     }
 
+    //this method send a user to the UserListFragment with bundled list of this chat room users
     private void inflateUserListFragment(){
         hideSoftKeyboard();
-        
+
+        //sending a list of parcelable User s and parcelable UserLocation s to the UserListFragment by a Bundle
         UserListFragment fragment = UserListFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(getString(R.string.intent_user_list), mUserList);
+        bundle.putParcelableArrayList(getString(R.string.intent_user_list), usersList);
+        bundle.putParcelableArrayList(getString(R.string.intent_user_list), userLocations);
         fragment.setArguments(bundle);
 
+        //switching to the UserListFragment with transaction and animation with the bundled instance of the fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
         transaction.replace(R.id.user_list_container, fragment, getString(R.string.fragment_user_list));
@@ -199,31 +241,31 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-
+    //this method intercepting and processing an intent if that was send
     private void getIncomingIntent(){
         if(getIntent().hasExtra(getString(R.string.intent_chatroom))){
-            mChatroom = getIntent().getParcelableExtra(getString(R.string.intent_chatroom));
-            setChatroomName();
+            chatroom = getIntent().getParcelableExtra(getString(R.string.intent_chatroom));
+            setChatroomNameToActionBar();
             joinChatroom();
         }
     }
 
     private void leaveChatroom(){
 
-        DocumentReference joinChatroomRef = mDb
+        DocumentReference joinChatroomRef = firestoreInstance
                 .collection(getString(R.string.collection_chatrooms))
-                .document(mChatroom.getChatroom_id())
+                .document(chatroom.getChatroom_id())
                 .collection(getString(R.string.collection_chatroom_user_list))
                 .document(FirebaseAuth.getInstance().getUid());
 
         joinChatroomRef.delete();
     }
 
+    //fetching chatroom's list of users and setting the pojo of the User which is singleton
     private void joinChatroom(){
-
-        DocumentReference joinChatroomRef = mDb
+        DocumentReference joinChatroomRef = firestoreInstance
                 .collection(getString(R.string.collection_chatrooms))
-                .document(mChatroom.getChatroom_id())
+                .document(chatroom.getChatroom_id())
                 .collection(getString(R.string.collection_chatroom_user_list))
                 .document(FirebaseAuth.getInstance().getUid());
 
@@ -231,8 +273,10 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
         joinChatroomRef.set(user); // Don't care about listening for completion.
     }
 
-    private void setChatroomName(){
-        getSupportActionBar().setTitle(mChatroom.getTitle());
+    //setting the action bar with the name of the chat
+    //this method is calling inside getIncomingIntent() which is inside onCreate()
+    private void setChatroomNameToActionBar(){
+        getSupportActionBar().setTitle(chatroom.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
@@ -246,11 +290,11 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mChatMessageEventListener != null){
-            mChatMessageEventListener.remove();
+        if(chatMessageEventListener != null){
+            chatMessageEventListener.remove();
         }
-        if(mUserListEventListener != null){
-            mUserListEventListener.remove();
+        if(userListEventListener != null){
+            userListEventListener.remove();
         }
     }
 

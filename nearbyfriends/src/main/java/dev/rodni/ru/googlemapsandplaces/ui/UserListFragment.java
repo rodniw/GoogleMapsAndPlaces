@@ -3,6 +3,7 @@ package dev.rodni.ru.googlemapsandplaces.ui;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.adapters.UserRecyclerAdapter;
 import dev.rodni.ru.googlemapsandplaces.models.User;
+import dev.rodni.ru.googlemapsandplaces.models.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.ui.lifecycle.UserListFragmentLifecycleObserver;
 
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.MAPVIEW_BUNDLE_KEY;
@@ -32,7 +34,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = "UserListFragment";
 
     //recycler view
-    private RecyclerView mUserListRecyclerView;
+    private RecyclerView userListRecyclerView;
 
     //map view
     private MapView mapView;
@@ -41,8 +43,9 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     private UserListFragmentLifecycleObserver lifecycleObserver;
 
     //vars
-    private ArrayList<User> mUserList = new ArrayList<>();
-    private UserRecyclerAdapter mUserRecyclerAdapter;
+    private ArrayList<User> usersList = new ArrayList<>();
+    private ArrayList<UserLocation> usersLocationsList = new ArrayList<>();
+    private UserRecyclerAdapter userRecyclerAdapter;
 
     //simple static get instance method
     public static UserListFragment newInstance(){
@@ -53,7 +56,8 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null){
-            mUserList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
+            usersList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
+            usersLocationsList = getArguments().getParcelableArrayList(getString(R.string.intent_user_list));
         }
 
     }
@@ -62,7 +66,7 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.fragment_user_list, container, false);
-        mUserListRecyclerView = view.findViewById(R.id.user_list_recycler_view);
+        userListRecyclerView = view.findViewById(R.id.user_list_recycler_view);
         mapView = view.findViewById(R.id.user_list_map);
 
         //initialize the fragment's lifecycle observer and pass there the mapView
@@ -74,6 +78,16 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
         initUserListRecyclerView();
 
         initGoogleMap(savedInstanceState);
+
+        //checking the list of user's locations
+        for (UserLocation userlocation : usersLocationsList) {
+            Log.d(TAG, "onCreateView: user location " + userlocation.getUser().getUsername());
+            Log.d(TAG,
+                    "onCreateView: user geopoint " +
+                            userlocation.getGeo_point().getLatitude() +
+                            "\n" +
+                            userlocation.getGeo_point().getLongitude());
+        }
 
         return view;
     }
@@ -92,9 +106,9 @@ public class UserListFragment extends Fragment implements OnMapReadyCallback {
 
     //simple init recycler view
     private void initUserListRecyclerView(){
-        mUserRecyclerAdapter = new UserRecyclerAdapter(mUserList);
-        mUserListRecyclerView.setAdapter(mUserRecyclerAdapter);
-        mUserListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        userRecyclerAdapter = new UserRecyclerAdapter(usersList);
+        userListRecyclerView.setAdapter(userRecyclerAdapter);
+        userListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     //here i save my location into the map
