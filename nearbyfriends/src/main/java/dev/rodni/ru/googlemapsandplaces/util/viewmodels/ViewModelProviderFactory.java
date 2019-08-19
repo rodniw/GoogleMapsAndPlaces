@@ -30,7 +30,7 @@ public class ViewModelProviderFactory implements ViewModelProvider.Factory {
             // loop through the allowable keys (aka allowed classes with the @ViewModelKey)
             for (Map.Entry<Class<? extends ViewModel>, Provider<ViewModel>> entry : creators.entrySet()) {
 
-                // if it's allowed, set the Provider<ViewModel>
+                // if it's allowed, set the Provider<ImageListViewModel>
                 if (modelClass.isAssignableFrom(entry.getKey())) {
                     creator = entry.getValue();
                     break;
