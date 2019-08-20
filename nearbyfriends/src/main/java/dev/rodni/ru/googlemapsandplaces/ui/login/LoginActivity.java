@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
@@ -29,7 +30,8 @@ import static android.text.TextUtils.isEmpty;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
 
-    @Inject User userApp;
+    @Inject @Named("app_user")
+    User userSingleton;
 
     //Firebase
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -42,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         mEmail = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
         mProgressBar = findViewById(R.id.progressBar);
@@ -92,14 +95,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userRef.get().addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         Log.d(TAG, "onComplete: successfully set the user client.");
-                        User user1 = (task.getResult().toObject(User.class));
-
-                        userApp.setAvatar(user1.getAvatar());
-                        userApp.setEmail(user1.getEmail());
-                        userApp.setUser_id(user1.getUser_id());
-                        userApp.setUsername(user1.getUsername());
+                        //User user1 = (task.getResult().toObject(User.class));
+                        try {
+                            userSingleton = task.getResult().toObject(User.class);
+                        } catch (NullPointerException e) {
+                            Log.d(TAG, "setupFirebaseAuth: " + e.getMessage());
+                        }
                         //User user = task.getResult().toObject(User.class);
-                        //((UserClient)(getApplicationContext())).setUser(user1);
+                        //((UserProvider)(getApplicationContext())).setUser(user1);
                     }
                 });
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);

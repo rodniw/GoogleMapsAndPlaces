@@ -2,13 +2,16 @@ package dev.rodni.ru.googlemapsandplaces.ui.chatroom;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -29,8 +32,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import dagger.android.support.DaggerAppCompatActivity;
+import dagger.android.support.DaggerFragment;
 import dev.rodni.ru.googlemapsandplaces.R;
+import dev.rodni.ru.googlemapsandplaces.di.DaggerAppComponent;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.ChatMessage;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
@@ -38,10 +45,12 @@ import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
 
 //TODO: refactor this activity to a fragment and use di, mvvm
-public class ChatroomActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChatroomActivity extends DaggerFragment implements View.OnClickListener {
     private static final String TAG = "ChatroomActivity";
+    private static final String TAG_USER = "TAG_USER";
 
-    @Inject User userApp;
+    @Inject @Named("app_user")
+    User userSingleton;
 
     //parcelable model class of the chatroom
     private Chatroom chatroom;
@@ -67,21 +76,26 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     private UserListFragment mUserListFragment;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //init views
-        setContentView(R.layout.activity_chatroom);
-        messageEditText = findViewById(R.id.input_message);
-        chatMessageRecyclerView = findViewById(R.id.chatmessage_recycler_view);
-        findViewById(R.id.checkmark).setOnClickListener(this);
-
         //init firestore
         firestoreInstance = FirebaseFirestore.getInstance();
 
-        getIncomingIntent();
+        Log.d(TAG_USER, "onCreate: " + userSingleton.toString());
+
         initChatroomRecyclerView();
         getChatroomUsers();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_chatroom, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void getChatMessages(){
@@ -139,7 +153,7 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
                             try {
                                 getUserLocation(user);
                             } catch (NullPointerException exception) {
-                                Toast.makeText(this, "An error occured: " + exception, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "An error occured: " + exception, Toast.LENGTH_SHORT).show();
                             }
                         }
                         Log.d(TAG, "onEvent: user list size: " + usersList.size());
@@ -164,9 +178,9 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initChatroomRecyclerView(){
-        chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(chatMessages, new ArrayList<User>(), this);
+        chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(chatMessages, new ArrayList<User>(), getActivity());
         chatMessageRecyclerView.setAdapter(chatMessageRecyclerAdapter);
-        chatMessageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        chatMessageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         chatMessageRecyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
@@ -198,16 +212,17 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
             newChatMessage.setMessage(message);
             newChatMessage.setMessage_id(newMessageDoc.getId());
 
-            //User user = ((UserClient)(getApplicationContext())).getUser();
-            Log.d(TAG, "insertNewMessage: retrieved user client: " + userApp.toString());
-            newChatMessage.setUser(userApp);
+            //User user = userProvider.getUser();
+            //User user = ((UserProvider)(getApplicationContext())).getUser();
+            Log.d(TAG, "insertNewMessage: retrieved user client: " + userSingleton.toString());
+            newChatMessage.setUser(userSingleton);
 
             newMessageDoc.set(newChatMessage).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     clearMessage();
                 }else{
-                    View parentLayout = findViewById(android.R.id.content);
-                    Snackbar.make(parentLayout, "Something went wrong.", Snackbar.LENGTH_SHORT).show();
+                    //View parentLayout = findViewById(android.R.id.content);
+                    //Snackbar.make(parentLayout, "Something went wrong.", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
@@ -217,36 +232,8 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
         messageEditText.setText("");
     }
 
-    //this method send a user to the UserListFragment with bundled list of this chat room users
-    private void inflateUserListFragment(){
-        hideSoftKeyboard();
-
-        //sending a list of parcelable User s and parcelable UserLocation s to the UserListFragment by a Bundle
-        UserListFragment fragment = UserListFragment.newInstance();
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(getString(R.string.intent_user_list), usersList);
-        bundle.putParcelableArrayList(getString(R.string.intent_user_locations), userLocations);
-        fragment.setArguments(bundle);
-
-        //switching to the UserListFragment with transaction and animation with the bundled instance of the fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
-        transaction.replace(R.id.user_list_container, fragment, getString(R.string.fragment_user_list));
-        transaction.addToBackStack(getString(R.string.fragment_user_list));
-        transaction.commit();
-    }
-
     private void hideSoftKeyboard(){
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-    }
-
-    //this method intercepting and processing an intent if that was send
-    private void getIncomingIntent(){
-        if(getIntent().hasExtra(getString(R.string.intent_chatroom))){
-            chatroom = getIntent().getParcelableExtra(getString(R.string.intent_chatroom));
-            setChatroomNameToActionBar();
-            joinChatroom();
-        }
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void leaveChatroom(){
@@ -267,68 +254,26 @@ public class ChatroomActivity extends AppCompatActivity implements View.OnClickL
                 .collection(getString(R.string.collection_chatroom_user_list))
                 .document(FirebaseAuth.getInstance().getUid());
 
-        //User user = ((UserClient)(getApplicationContext())).getUser();
-        joinChatroomRef.set(userApp); // Don't care about listening for completion.
-    }
-
-    //setting the action bar with the name of the chat
-    //this method is calling inside getIncomingIntent() which is inside onCreate()
-    private void setChatroomNameToActionBar(){
-        getSupportActionBar().setTitle(chatroom.getTitle());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        Log.d(TAG_USER, "joinChatroom: " + userSingleton.toString());
+        //User user = ((UserProvider)(getApplicationContext())).getUser();
+        User user = userSingleton;
+        joinChatroomRef.set(user); // Don't care about listening for completion.
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         getChatMessages();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if(chatMessageEventListener != null){
             chatMessageEventListener.remove();
         }
         if(userListEventListener != null){
             userListEventListener.remove();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.chatroom_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case android.R.id.home:{
-                UserListFragment fragment =
-                        (UserListFragment) getSupportFragmentManager()
-                                .findFragmentByTag(getString(R.string.fragment_user_list));
-                if(fragment != null){
-                    if(fragment.isVisible()){
-                        getSupportFragmentManager().popBackStack();
-                        return true;
-                    }
-                }
-                finish();
-                return true;
-            }
-            case R.id.action_chatroom_user_list:{
-                inflateUserListFragment();
-                return true;
-            }
-            case R.id.action_chatroom_leave:{
-                leaveChatroom();
-                return true;
-            }
-            default:{
-                return super.onOptionsItemSelected(item);
-            }
         }
     }
 

@@ -102,7 +102,7 @@ public class LocationService extends Service {
                         Location location = locationResult.getLastLocation();
 
                         if (location != null) {
-                            //User user = ((UserClient)(getApplicationContext())).getUser();
+                            //User user = ((UserProvider)(getApplicationContext())).getUser();
                             GeoPoint geoPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
                             UserLocation userLocation = new UserLocation(userApp, geoPoint, null);
                             saveUserLocation(userLocation);

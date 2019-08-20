@@ -22,13 +22,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.android.support.DaggerFragment;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.MAPVIEW_BUNDLE_KEY;
 
-public class UserListFragment extends Fragment implements OnMapReadyCallback {
+public class UserListFragment extends DaggerFragment implements OnMapReadyCallback {
 
     private static final String TAG = "UserListFragment";
 

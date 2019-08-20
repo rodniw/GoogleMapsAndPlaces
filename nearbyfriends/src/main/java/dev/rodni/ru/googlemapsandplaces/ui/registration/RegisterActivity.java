@@ -19,7 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import dagger.android.support.DaggerAppCompatActivity;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
@@ -27,10 +29,11 @@ import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
 import static android.text.TextUtils.isEmpty;
 import static dev.rodni.ru.googlemapsandplaces.util.Check.doStringsMatch;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends DaggerAppCompatActivity implements View.OnClickListener {
     private static final String TAG = "RegisterActivity";
 
-    @Inject User userApp;
+    @Inject @Named("app_user")
+    User userSingleton;
 
     //widgets
     private EditText mEmail, mPassword, mConfirmPassword;
@@ -67,9 +70,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         Log.d(TAG, "onComplete: AuthState: " + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                         //insert some default data
-                        userApp.setEmail(email);
-                        userApp.setUsername(email.substring(0, email.indexOf("@")));
-                        userApp.setUser_id(FirebaseAuth.getInstance().getUid());
+                        User user = new User();
+                        user.setEmail(email);
+                        user.setUsername(email.substring(0, email.indexOf("@")));
+                        user.setUser_id(FirebaseAuth.getInstance().getUid());
 
                         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                                 .setTimestampsInSnapshotsEnabled(true)
@@ -80,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 .collection(getString(R.string.collection_users))
                                 .document(FirebaseAuth.getInstance().getUid());
 
-                        newUserRef.set(userApp).addOnCompleteListener(task1 -> {
+                        newUserRef.set(user).addOnCompleteListener(task1 -> {
                             hideDialog();
 
                             if(task1.isSuccessful()){

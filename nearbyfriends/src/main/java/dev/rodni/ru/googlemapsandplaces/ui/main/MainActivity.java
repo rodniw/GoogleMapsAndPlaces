@@ -45,7 +45,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import dagger.android.support.DaggerAppCompatActivity;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
@@ -60,11 +62,13 @@ import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUES
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends DaggerAppCompatActivity implements
         View.OnClickListener, ChatroomRecyclerAdapter.ChatroomRecyclerClickListener {
     private static final String TAG = "MainActivity";
+    private static final String TAG_USER = "TAG_USER";
 
-    @Inject User userApp;
+    @Inject @Named("app_user")
+    User userSingleton;
 
     //view
     private ProgressBar mProgressBar;
@@ -108,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
         initSupportActionBar();
         initChatroomRecyclerView();
 
-        Toast.makeText(this, "User: " + userApp.getAvatar(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "User: " + userProvider.getUser().getEmail(), Toast.LENGTH_LONG).show();
     }
 
     //work with the action bar
@@ -239,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements
         navChatroomActivity(mChatrooms.get(position));
     }
 
-    //sign outj
+    //sign out
     private void signOut(){
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, LoginActivity.class);
@@ -283,9 +287,10 @@ public class MainActivity extends AppCompatActivity implements
             userRef.get().addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     Log.d(TAG, "onComplete: successfully set the user client.");
-                    userApp = task.getResult().toObject(User.class);
-                    userLocation.setUser(userApp);
-                    //((UserClient)(getApplicationContext())).setUser(user);
+                    userSingleton = task.getResult().toObject(User.class);
+                    userLocation.setUser(userSingleton);
+                    Log.d(TAG_USER, "getUserDetails: " + userSingleton.toString());
+                    //((UserProvider)(getApplicationContext())).setUser(user);
                     //userApp = user;
                     getLastKnownLocation();
                 }

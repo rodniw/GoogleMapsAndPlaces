@@ -9,13 +9,14 @@ import dagger.Component;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 
 //the main comp
 @Singleton
 @Component( modules = {
         AndroidSupportInjectionModule.class,
+        ActivityBuilderModule.class,
         AppModule.class,
+        ViewModelFactoryModule.class,
 })
 public interface AppComponent extends AndroidInjector<NearbyFriendsApplication> {
 

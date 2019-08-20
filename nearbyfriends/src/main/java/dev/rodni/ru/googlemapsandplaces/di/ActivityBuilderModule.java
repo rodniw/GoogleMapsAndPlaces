@@ -48,12 +48,4 @@ public abstract class ActivityBuilderModule {
     })
     abstract MainActivity contributeMainActivity();
 
-    @ChatroomScope
-    @ContributesAndroidInjector(modules = {
-            ChatroomViewModelsModule.class,
-            ChatroomFragmentBuilderModule.class,
-            ChatroomModule.class,
-    })
-    abstract ChatroomActivity contributeChatroomActivity();
-
 }
