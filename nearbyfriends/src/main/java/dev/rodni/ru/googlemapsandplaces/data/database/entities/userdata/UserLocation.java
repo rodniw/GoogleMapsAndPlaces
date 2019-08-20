@@ -3,13 +3,17 @@ package dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import org.threeten.bp.ZonedDateTime;
+
+import java.util.Date;
 
 //this class is parcelable because we need to pass this between the activities
 @Entity(tableName = "user_location")
@@ -18,20 +22,27 @@ public class UserLocation implements Parcelable{
     @PrimaryKey(autoGenerate = false)
     private int id = 1;
 
+    @Ignore
+    @Embedded(prefix = "user_location_")
     private User user;
+    @Embedded(prefix = "user_location_")
     private GeoPoint geo_point;
-    private @ServerTimestamp ZonedDateTime timestamp;
+    @Embedded(prefix = "user_location_")
+    private @ServerTimestamp
+    Date timestamp;
 
-    public UserLocation(User user, GeoPoint geo_point, ZonedDateTime timestamp) {
+    public UserLocation(User user, GeoPoint geo_point, Date timestamp) {
         this.user = user;
         this.geo_point = geo_point;
         this.timestamp = timestamp;
     }
 
+
     public UserLocation() {
 
     }
 
+    @Ignore
     protected UserLocation(Parcel in) {
         user = in.readParcelable(User.class.getClassLoader());
     }
@@ -64,11 +75,11 @@ public class UserLocation implements Parcelable{
         this.geo_point = geo_point;
     }
 
-    public ZonedDateTime getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(ZonedDateTime timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 

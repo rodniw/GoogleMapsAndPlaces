@@ -4,14 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "current_user")
 public class User implements Parcelable{
 
     @PrimaryKey(autoGenerate = false)
-    private String user_id;
+    private int user_key = 1;
 
+    private String user_id;
     private String email;
     private String username;
     private String avatar;
@@ -23,10 +25,12 @@ public class User implements Parcelable{
         this.avatar = avatar;
     }
 
+    @Ignore
     public User() {
 
     }
 
+    @Ignore
     protected User(Parcel in) {
         email = in.readString();
         user_id = in.readString();
@@ -80,6 +84,14 @@ public class User implements Parcelable{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public int getUser_key() {
+        return user_key;
+    }
+
+    public void setUser_key(int user_key) {
+        this.user_key = user_key;
     }
 
     @Override
