@@ -31,8 +31,8 @@ import com.google.firebase.firestore.GeoPoint;
 import javax.inject.Inject;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
 
 public class LocationService extends Service {
     private static final String TAG = "LocationService";

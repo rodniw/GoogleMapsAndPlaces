@@ -32,10 +32,10 @@ import javax.inject.Named;
 
 import dagger.android.support.DaggerFragment;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.chatdata.ChatMessage;
-import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata.ChatMessage;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata.Chatroom;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
 import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 

@@ -73,6 +73,10 @@ dependencies {
     def maps_version = '0.5'
     api "com.google.maps.android:android-maps-utils:$maps_version"
 
+    // Better dateTime-time support even on older Android versions
+    def threetenabp_version = '1.1.0'
+    api "com.jakewharton.threetenabp:threetenabp:$threetenabp_version"
+
     // Dagger
     def dagger_version = "2.22"
 //    def dagger_version = "2.16" // version used by google samples

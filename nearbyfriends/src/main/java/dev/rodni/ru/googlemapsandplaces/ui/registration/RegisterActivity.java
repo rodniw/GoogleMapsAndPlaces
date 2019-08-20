@@ -10,7 +10,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +22,7 @@ import javax.inject.Named;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
 
 import static android.text.TextUtils.isEmpty;

@@ -3,14 +3,11 @@ package dev.rodni.ru.googlemapsandplaces.ui.profile;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -23,7 +20,7 @@ import javax.inject.Named;
 import dagger.android.support.DaggerFragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.IProfile;
 import dev.rodni.ru.googlemapsandplaces.ui.avaterpicker.ImageListFragment;
 

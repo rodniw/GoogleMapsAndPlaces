@@ -27,14 +27,12 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.GeoPoint;
 
 import dagger.android.support.DaggerAppCompatActivity;
-import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.services.LocationService;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
-import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment;
 import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment;
 
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.ERROR_DIALOG_REQUEST;
