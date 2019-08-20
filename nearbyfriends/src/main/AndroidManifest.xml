@@ -32,7 +32,7 @@
         </activity>
         <activity android:name=".ui.registration.RegisterActivity" />
         <activity android:name=".ui.chatroom.ChatroomFragment" />
-        <activity android:name=".ui.profile.ProfileActivity"/>
+        <activity android:name=".ui.profile.ProfileFragment"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

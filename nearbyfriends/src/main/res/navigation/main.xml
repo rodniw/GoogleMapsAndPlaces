@@ -16,13 +16,23 @@
         android:id="@+id/chatroomScreen"
         android:name="dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment"
         android:label="Chat room"
-        tools:layout="@layout/fragment_chatroom"/>
+        tools:layout="@layout/fragment_chatroom">
+        <action
+            android:id="@+id/action_chatroomScreen_to_userListScreen"
+            app:destination="@id/userListScreen" />
+    </fragment>
 
     <fragment
         android:id="@+id/userListScreen"
         android:name="dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment"
         android:label="Chat users"
         tools:layout="@layout/fragment_user_list"/>
+
+    <fragment
+        android:id="@+id/userProfileScreen"
+        android:name="dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile"/>
 
 
 </navigation>
