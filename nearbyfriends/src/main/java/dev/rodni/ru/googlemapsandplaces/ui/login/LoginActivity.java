@@ -23,7 +23,7 @@ import javax.inject.Named;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity;
-import dev.rodni.ru.googlemapsandplaces.ui.main.MainActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         //((UserProvider)(getApplicationContext())).setUser(user1);
                     }
                 });
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ListChatsFragment.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();

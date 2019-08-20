@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui.main;
+package dev.rodni.ru.googlemapsandplaces.ui.mainpage;
 
 import android.Manifest;
 import android.app.ActivityManager;
@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +52,6 @@ import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.services.LocationService;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileActivity;
 
@@ -62,9 +60,9 @@ import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUES
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 
-public class MainActivity extends DaggerAppCompatActivity implements
+public class ListChatsFragment extends DaggerAppCompatActivity implements
         View.OnClickListener, ChatroomRecyclerAdapter.ChatroomRecyclerClickListener {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "ListChatsFragment";
     private static final String TAG_USER = "TAG_USER";
 
     @Inject @Named("app_user")
@@ -96,7 +94,7 @@ public class MainActivity extends DaggerAppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.fragment_list_of_chats);
         Log.d(TAG, "onCreate: ");
         
         mProgressBar = findViewById(R.id.progressBar);
@@ -197,21 +195,12 @@ public class MainActivity extends DaggerAppCompatActivity implements
             hideDialog();
             //if a chat room successfully created then navigate to chat room activity else show error message by the snackbar
             if(task.isSuccessful()){
-                navChatroomActivity(chatroom);
+                //navChatroomFragment(chatroom);
             }else{
                 View parentLayout = findViewById(R.id.content);
                 Snackbar.make(parentLayout, "Something went wrong.", Snackbar.LENGTH_SHORT).show();
             }
         });
-    }
-
-    //simple method that navigates user to a chat room activity
-    private void navChatroomActivity(Chatroom chatroom){
-        Log.d(TAG, "navChatroomActivity: ");
-        
-        Intent intent = new Intent(MainActivity.this, ChatroomActivity.class);
-        intent.putExtra(getString(R.string.intent_chatroom), chatroom);
-        startActivity(intent);
     }
 
     //this method builds a dialog where a user can create a new dialog and set its name
@@ -230,7 +219,7 @@ public class MainActivity extends DaggerAppCompatActivity implements
                 buildNewChatroom(input.getText().toString());
             }
             else {
-                Toast.makeText(MainActivity.this, "Enter a chatroom name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListChatsFragment.this, "Enter a chatroom name", Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
@@ -240,7 +229,7 @@ public class MainActivity extends DaggerAppCompatActivity implements
     //click listener for dialog's list
     @Override
     public void onChatroomSelected(int position) {
-        navChatroomActivity(mChatrooms.get(position));
+        //navChatroomFragment(mChatrooms.get(position));
     }
 
     //sign out
@@ -397,7 +386,7 @@ public class MainActivity extends DaggerAppCompatActivity implements
             //check for the android version to decide to start foreground service of temporary service
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
                 //if higher than O then start foreground service
-                MainActivity.this.startForegroundService(serviceIntent);
+                ListChatsFragment.this.startForegroundService(serviceIntent);
             }else{
                 //if less that O then start temporary service
                 startService(serviceIntent);
@@ -412,7 +401,7 @@ public class MainActivity extends DaggerAppCompatActivity implements
         Log.d(TAG, "isServicesOK: checking google services version");
         
         //class GoogleApiAvailability can check availability of some google's features
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(ListChatsFragment.this);
 
         //connection result is a common android.gms class which contains constants and things like constants
         if(available == ConnectionResult.SUCCESS){
@@ -423,7 +412,7 @@ public class MainActivity extends DaggerAppCompatActivity implements
         else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
             //an error occured but we can resolve it
             Log.d(TAG, "isServicesOK: an error occured but we can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(ListChatsFragment.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
         }else{
             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();

@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.ui.main;
+package dev.rodni.ru.googlemapsandplaces.ui.mainpage;
 
 import android.view.LayoutInflater;
 import android.view.View;

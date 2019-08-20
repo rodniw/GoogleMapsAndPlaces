@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.mainpage.ListChatsFragment">
         </activity>
         <activity android:name=".ui.login.LoginActivity" >
             <intent-filter>
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.registration.RegisterActivity" />
-        <activity android:name=".ui.chatroom.ChatroomActivity" />
+        <activity android:name=".ui.chatroom.ChatroomFragment" />
         <activity android:name=".ui.profile.ProfileActivity"/>
 
         <meta-data

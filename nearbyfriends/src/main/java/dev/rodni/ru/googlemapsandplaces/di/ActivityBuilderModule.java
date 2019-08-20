@@ -12,13 +12,8 @@ import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainScope;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainViewModelsModule;
-import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomFragmentBuilderModule;
-import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomModule;
-import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomScope;
-import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomViewModelsModule;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
-import dev.rodni.ru.googlemapsandplaces.ui.main.MainActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment;
 import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity;
 
 //module to provide subcomponents to my activities by ContributesAndroidInjector
@@ -46,6 +41,6 @@ public abstract class ActivityBuilderModule {
             MainFragmentBuilderModule.class,
             MainModule.class,
     })
-    abstract MainActivity contributeMainActivity();
+    abstract ListChatsFragment contributeMainActivity();
 
 }

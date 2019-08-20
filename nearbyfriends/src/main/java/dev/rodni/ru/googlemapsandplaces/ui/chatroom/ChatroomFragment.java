@@ -3,8 +3,6 @@ package dev.rodni.ru.googlemapsandplaces.ui.chatroom;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -13,12 +11,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -34,23 +30,30 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import dagger.android.support.DaggerAppCompatActivity;
 import dagger.android.support.DaggerFragment;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.di.DaggerAppComponent;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.ChatMessage;
 import dev.rodni.ru.googlemapsandplaces.models.chatdata.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.models.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
+import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 
 //TODO: refactor this activity to a fragment and use di, mvvm
-public class ChatroomActivity extends DaggerFragment implements View.OnClickListener {
-    private static final String TAG = "ChatroomActivity";
+public class ChatroomFragment extends DaggerFragment implements View.OnClickListener {
+    private static final String TAG = "ChatroomFragment";
     private static final String TAG_USER = "TAG_USER";
 
     @Inject @Named("app_user")
     User userSingleton;
+    @Inject
+    ViewModelProviderFactory providerFactory;
+    @Inject
+    ChatMessageRecyclerAdapter adapter;
+    @Inject
+    LinearLayoutManager layoutManager;
+
+    private ChatroomViewModel viewModel;
 
     //parcelable model class of the chatroom
     private Chatroom chatroom;
@@ -60,7 +63,6 @@ public class ChatroomActivity extends DaggerFragment implements View.OnClickList
 
     //recycler view and adapter
     private RecyclerView chatMessageRecyclerView;
-    private ChatMessageRecyclerAdapter chatMessageRecyclerAdapter;
 
     //firebase dependencies
     private ListenerRegistration chatMessageEventListener, userListEventListener;
@@ -90,11 +92,18 @@ public class ChatroomActivity extends DaggerFragment implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_chatroom, container, false);
+        return inflater.inflate(R.layout.fragment_chatroom, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        messageEditText = view.findViewById(R.id.input_message);
+        chatMessageRecyclerView = view.findViewById(R.id.chatmessage_recycler_view);
+
+        view.findViewById(R.id.checkmark).setOnClickListener(this);
+
+        viewModel = ViewModelProviders.of(this, providerFactory).get(ChatroomViewModel.class);
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -124,7 +133,7 @@ public class ChatroomActivity extends DaggerFragment implements View.OnClickList
                             }
 
                         }
-                        chatMessageRecyclerAdapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -178,9 +187,9 @@ public class ChatroomActivity extends DaggerFragment implements View.OnClickList
     }
 
     private void initChatroomRecyclerView(){
-        chatMessageRecyclerAdapter = new ChatMessageRecyclerAdapter(chatMessages, new ArrayList<User>(), getActivity());
-        chatMessageRecyclerView.setAdapter(chatMessageRecyclerAdapter);
-        chatMessageRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new ChatMessageRecyclerAdapter(chatMessages, new ArrayList<User>(), getActivity());
+        chatMessageRecyclerView.setAdapter(adapter);
+        chatMessageRecyclerView.setLayoutManager(layoutManager);
 
         chatMessageRecyclerView.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
@@ -192,7 +201,6 @@ public class ChatroomActivity extends DaggerFragment implements View.OnClickList
                 }, 100);
             }
         });
-
     }
 
 
