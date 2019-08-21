@@ -9,7 +9,7 @@ import dev.rodni.ru.googlemapsandplaces.di.ViewModelKey;
 import dev.rodni.ru.googlemapsandplaces.ui.registration.RegistrationViewModel;
 
 @Module
-public abstract class RegistrViewModelsModule {
+public abstract class RegisterViewModelsModule {
 
     @Binds
     @IntoMap

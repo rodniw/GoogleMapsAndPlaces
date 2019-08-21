@@ -48,8 +48,8 @@ public class ChatroomFragment extends DaggerFragment implements View.OnClickList
     User userSingleton;
     @Inject
     ViewModelProviderFactory providerFactory;
-    @Inject
-    ChatMessageRecyclerAdapter adapter;
+    //@Inject
+    //ChatMessageRecyclerAdapter adapter;
     @Inject
     LinearLayoutManager layoutManager;
 
@@ -63,6 +63,7 @@ public class ChatroomFragment extends DaggerFragment implements View.OnClickList
 
     //recycler view and adapter
     private RecyclerView chatMessageRecyclerView;
+    private ChatMessageRecyclerAdapter adapter;
 
     //firebase dependencies
     private ListenerRegistration chatMessageEventListener, userListEventListener;
@@ -187,7 +188,7 @@ public class ChatroomFragment extends DaggerFragment implements View.OnClickList
     }
 
     private void initChatroomRecyclerView(){
-        adapter = new ChatMessageRecyclerAdapter(chatMessages, new ArrayList<User>(), getActivity());
+        adapter = new ChatMessageRecyclerAdapter(chatMessages, usersList, getActivity());
         chatMessageRecyclerView.setAdapter(adapter);
         chatMessageRecyclerView.setLayoutManager(layoutManager);
 

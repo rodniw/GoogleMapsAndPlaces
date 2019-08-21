@@ -7,6 +7,8 @@ import android.app.Fragment;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
+import androidx.lifecycle.ViewModel;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import dagger.android.AndroidInjector;
@@ -14,20 +16,37 @@ import dagger.android.DaggerApplication_MembersInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.DispatchingAndroidInjector_Factory;
 import dagger.android.support.DaggerAppCompatActivity_MembersInjector;
+import dagger.android.support.DaggerFragment_MembersInjector;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Preconditions;
+import dev.rodni.ru.googlemapsandplaces.MainActivity;
 import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeChatroomFragment;
+import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeListChatsFragment;
+import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeProfileFragment;
+import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeUserListFragment;
+import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomModule_ProvideLayoutManagerFactory;
+import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomViewModel_Factory;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity_MembersInjector;
 import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment;
 import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment_MembersInjector;
 import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
+import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 import java.util.Map;
 import javax.inject.Provider;
 
 public final class DaggerAppComponent implements AppComponent {
+  private final Application application;
+
   private Provider<ActivityBuilderModule_ContributeLoginActivity.LoginActivitySubcomponent.Factory>
       loginActivitySubcomponentFactoryProvider;
 
@@ -35,15 +54,14 @@ public final class DaggerAppComponent implements AppComponent {
           ActivityBuilderModule_ContributeRegisterActivity.RegisterActivitySubcomponent.Factory>
       registerActivitySubcomponentFactoryProvider;
 
-  private Provider<
-          ActivityBuilderModule_ContributeMainActivity.ListChatsFragmentSubcomponent.Factory>
-      listChatsFragmentSubcomponentFactoryProvider;
+  private Provider<ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent.Factory>
+      mainActivitySubcomponentFactoryProvider;
 
   private Provider<User> userProvider;
 
-  private DaggerAppComponent(Application application) {
-
-    initialize(application);
+  private DaggerAppComponent(Application applicationParam) {
+    this.application = applicationParam;
+    initialize(applicationParam);
   }
 
   public static AppComponent.Builder builder() {
@@ -57,8 +75,8 @@ public final class DaggerAppComponent implements AppComponent {
         (Provider) loginActivitySubcomponentFactoryProvider,
         RegisterActivity.class,
         (Provider) registerActivitySubcomponentFactoryProvider,
-        ListChatsFragment.class,
-        (Provider) listChatsFragmentSubcomponentFactoryProvider);
+        MainActivity.class,
+        (Provider) mainActivitySubcomponentFactoryProvider);
   }
 
   private DispatchingAndroidInjector<Activity> getDispatchingAndroidInjectorOfActivity() {
@@ -101,7 +119,7 @@ public final class DaggerAppComponent implements AppComponent {
   }
 
   @SuppressWarnings("unchecked")
-  private void initialize(final Application application) {
+  private void initialize(final Application applicationParam) {
     this.loginActivitySubcomponentFactoryProvider =
         new Provider<
             ActivityBuilderModule_ContributeLoginActivity.LoginActivitySubcomponent.Factory>() {
@@ -122,13 +140,13 @@ public final class DaggerAppComponent implements AppComponent {
             return new RegisterActivitySubcomponentFactory();
           }
         };
-    this.listChatsFragmentSubcomponentFactoryProvider =
+    this.mainActivitySubcomponentFactoryProvider =
         new Provider<
-            ActivityBuilderModule_ContributeMainActivity.ListChatsFragmentSubcomponent.Factory>() {
+            ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent.Factory>() {
           @Override
-          public ActivityBuilderModule_ContributeMainActivity.ListChatsFragmentSubcomponent.Factory
+          public ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent.Factory
               get() {
-            return new ListChatsFragmentSubcomponentFactory();
+            return new MainActivitySubcomponentFactory();
           }
         };
     this.userProvider = DoubleCheck.provider(AppModule_UserFactory.create());
@@ -233,35 +251,275 @@ public final class DaggerAppComponent implements AppComponent {
     }
   }
 
-  private final class ListChatsFragmentSubcomponentFactory
-      implements ActivityBuilderModule_ContributeMainActivity.ListChatsFragmentSubcomponent
-          .Factory {
+  private final class MainActivitySubcomponentFactory
+      implements ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent.Factory {
     @Override
-    public ActivityBuilderModule_ContributeMainActivity.ListChatsFragmentSubcomponent create(
-        ListChatsFragment arg0) {
+    public ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent create(
+        MainActivity arg0) {
       Preconditions.checkNotNull(arg0);
-      return new ListChatsFragmentSubcomponentImpl(arg0);
+      return new MainActivitySubcomponentImpl(arg0);
     }
   }
 
-  private final class ListChatsFragmentSubcomponentImpl
-      implements ActivityBuilderModule_ContributeMainActivity.ListChatsFragmentSubcomponent {
-    private ListChatsFragmentSubcomponentImpl(ListChatsFragment arg0) {}
+  private final class MainActivitySubcomponentImpl
+      implements ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent {
+    private Provider<
+            MainFragmentBuilderModule_ContributeListChatsFragment.ListChatsFragmentSubcomponent
+                .Factory>
+        listChatsFragmentSubcomponentFactoryProvider;
+
+    private Provider<
+            MainFragmentBuilderModule_ContributeChatroomFragment.ChatroomFragmentSubcomponent
+                .Factory>
+        chatroomFragmentSubcomponentFactoryProvider;
+
+    private Provider<
+            MainFragmentBuilderModule_ContributeUserListFragment.UserListFragmentSubcomponent
+                .Factory>
+        userListFragmentSubcomponentFactoryProvider;
+
+    private Provider<
+            MainFragmentBuilderModule_ContributeProfileFragment.ProfileFragmentSubcomponent.Factory>
+        profileFragmentSubcomponentFactoryProvider;
+
+    private MainActivitySubcomponentImpl(MainActivity arg0) {
+
+      initialize(arg0);
+    }
+
+    private Map<Class<?>, Provider<AndroidInjector.Factory<?>>>
+        getMapOfClassOfAndProviderOfAndroidInjectorFactoryOf() {
+      return ImmutableMap.<Class<?>, Provider<AndroidInjector.Factory<?>>>builderWithExpectedSize(7)
+          .put(
+              LoginActivity.class,
+              (Provider) DaggerAppComponent.this.loginActivitySubcomponentFactoryProvider)
+          .put(
+              RegisterActivity.class,
+              (Provider) DaggerAppComponent.this.registerActivitySubcomponentFactoryProvider)
+          .put(
+              MainActivity.class,
+              (Provider) DaggerAppComponent.this.mainActivitySubcomponentFactoryProvider)
+          .put(ListChatsFragment.class, (Provider) listChatsFragmentSubcomponentFactoryProvider)
+          .put(ChatroomFragment.class, (Provider) chatroomFragmentSubcomponentFactoryProvider)
+          .put(UserListFragment.class, (Provider) userListFragmentSubcomponentFactoryProvider)
+          .put(ProfileFragment.class, (Provider) profileFragmentSubcomponentFactoryProvider)
+          .build();
+    }
+
+    private DispatchingAndroidInjector<androidx.fragment.app.Fragment>
+        getDispatchingAndroidInjectorOfFragment() {
+      return DispatchingAndroidInjector_Factory.newInstance(
+          getMapOfClassOfAndProviderOfAndroidInjectorFactoryOf(),
+          ImmutableMap.<String, Provider<AndroidInjector.Factory<?>>>of());
+    }
+
+    private DispatchingAndroidInjector<Fragment> getDispatchingAndroidInjectorOfFragment2() {
+      return DispatchingAndroidInjector_Factory.newInstance(
+          getMapOfClassOfAndProviderOfAndroidInjectorFactoryOf(),
+          ImmutableMap.<String, Provider<AndroidInjector.Factory<?>>>of());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initialize(final MainActivity arg0) {
+      this.listChatsFragmentSubcomponentFactoryProvider =
+          new Provider<
+              MainFragmentBuilderModule_ContributeListChatsFragment.ListChatsFragmentSubcomponent
+                  .Factory>() {
+            @Override
+            public MainFragmentBuilderModule_ContributeListChatsFragment
+                    .ListChatsFragmentSubcomponent.Factory
+                get() {
+              return new ListChatsFragmentSubcomponentFactory();
+            }
+          };
+      this.chatroomFragmentSubcomponentFactoryProvider =
+          new Provider<
+              MainFragmentBuilderModule_ContributeChatroomFragment.ChatroomFragmentSubcomponent
+                  .Factory>() {
+            @Override
+            public MainFragmentBuilderModule_ContributeChatroomFragment.ChatroomFragmentSubcomponent
+                    .Factory
+                get() {
+              return new ChatroomFragmentSubcomponentFactory();
+            }
+          };
+      this.userListFragmentSubcomponentFactoryProvider =
+          new Provider<
+              MainFragmentBuilderModule_ContributeUserListFragment.UserListFragmentSubcomponent
+                  .Factory>() {
+            @Override
+            public MainFragmentBuilderModule_ContributeUserListFragment.UserListFragmentSubcomponent
+                    .Factory
+                get() {
+              return new UserListFragmentSubcomponentFactory();
+            }
+          };
+      this.profileFragmentSubcomponentFactoryProvider =
+          new Provider<
+              MainFragmentBuilderModule_ContributeProfileFragment.ProfileFragmentSubcomponent
+                  .Factory>() {
+            @Override
+            public MainFragmentBuilderModule_ContributeProfileFragment.ProfileFragmentSubcomponent
+                    .Factory
+                get() {
+              return new ProfileFragmentSubcomponentFactory();
+            }
+          };
+    }
 
     @Override
-    public void inject(ListChatsFragment arg0) {
-      injectListChatsFragment(arg0);
+    public void inject(MainActivity arg0) {
+      injectMainActivity(arg0);
     }
 
     @CanIgnoreReturnValue
-    private ListChatsFragment injectListChatsFragment(ListChatsFragment instance) {
+    private MainActivity injectMainActivity(MainActivity instance) {
       DaggerAppCompatActivity_MembersInjector.injectSupportFragmentInjector(
-          instance, DaggerAppComponent.this.getDispatchingAndroidInjectorOfFragment2());
+          instance, getDispatchingAndroidInjectorOfFragment());
       DaggerAppCompatActivity_MembersInjector.injectFrameworkFragmentInjector(
-          instance, DaggerAppComponent.this.getDispatchingAndroidInjectorOfFragment());
-      ListChatsFragment_MembersInjector.injectUserSingleton(
-          instance, DaggerAppComponent.this.userProvider.get());
+          instance, getDispatchingAndroidInjectorOfFragment2());
       return instance;
+    }
+
+    private final class ListChatsFragmentSubcomponentFactory
+        implements MainFragmentBuilderModule_ContributeListChatsFragment
+            .ListChatsFragmentSubcomponent.Factory {
+      @Override
+      public MainFragmentBuilderModule_ContributeListChatsFragment.ListChatsFragmentSubcomponent
+          create(ListChatsFragment arg0) {
+        Preconditions.checkNotNull(arg0);
+        return new ListChatsFragmentSubcomponentImpl(arg0);
+      }
+    }
+
+    private final class ListChatsFragmentSubcomponentImpl
+        implements MainFragmentBuilderModule_ContributeListChatsFragment
+            .ListChatsFragmentSubcomponent {
+      private ListChatsFragmentSubcomponentImpl(ListChatsFragment arg0) {}
+
+      @Override
+      public void inject(ListChatsFragment arg0) {
+        injectListChatsFragment(arg0);
+      }
+
+      @CanIgnoreReturnValue
+      private ListChatsFragment injectListChatsFragment(ListChatsFragment instance) {
+        DaggerAppCompatActivity_MembersInjector.injectSupportFragmentInjector(
+            instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfFragment());
+        DaggerAppCompatActivity_MembersInjector.injectFrameworkFragmentInjector(
+            instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfFragment2());
+        ListChatsFragment_MembersInjector.injectUserSingleton(
+            instance, DaggerAppComponent.this.userProvider.get());
+        return instance;
+      }
+    }
+
+    private final class ChatroomFragmentSubcomponentFactory
+        implements MainFragmentBuilderModule_ContributeChatroomFragment.ChatroomFragmentSubcomponent
+            .Factory {
+      @Override
+      public MainFragmentBuilderModule_ContributeChatroomFragment.ChatroomFragmentSubcomponent
+          create(ChatroomFragment arg0) {
+        Preconditions.checkNotNull(arg0);
+        return new ChatroomFragmentSubcomponentImpl(arg0);
+      }
+    }
+
+    private final class ChatroomFragmentSubcomponentImpl
+        implements MainFragmentBuilderModule_ContributeChatroomFragment
+            .ChatroomFragmentSubcomponent {
+      private ChatroomFragmentSubcomponentImpl(ChatroomFragment arg0) {}
+
+      private Map<Class<? extends ViewModel>, Provider<ViewModel>>
+          getMapOfClassOfAndProviderOfViewModel() {
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(
+            ChatroomViewModel.class, (Provider) ChatroomViewModel_Factory.create());
+      }
+
+      private ViewModelProviderFactory getViewModelProviderFactory() {
+        return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());
+      }
+
+      private LinearLayoutManager getLinearLayoutManager() {
+        return ChatroomModule_ProvideLayoutManagerFactory.provideLayoutManager(
+            DaggerAppComponent.this.application);
+      }
+
+      @Override
+      public void inject(ChatroomFragment arg0) {
+        injectChatroomFragment(arg0);
+      }
+
+      @CanIgnoreReturnValue
+      private ChatroomFragment injectChatroomFragment(ChatroomFragment instance) {
+        DaggerFragment_MembersInjector.injectChildFragmentInjector(
+            instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfFragment());
+        ChatroomFragment_MembersInjector.injectUserSingleton(
+            instance, DaggerAppComponent.this.userProvider.get());
+        ChatroomFragment_MembersInjector.injectProviderFactory(
+            instance, getViewModelProviderFactory());
+        ChatroomFragment_MembersInjector.injectLayoutManager(instance, getLinearLayoutManager());
+        return instance;
+      }
+    }
+
+    private final class UserListFragmentSubcomponentFactory
+        implements MainFragmentBuilderModule_ContributeUserListFragment.UserListFragmentSubcomponent
+            .Factory {
+      @Override
+      public MainFragmentBuilderModule_ContributeUserListFragment.UserListFragmentSubcomponent
+          create(UserListFragment arg0) {
+        Preconditions.checkNotNull(arg0);
+        return new UserListFragmentSubcomponentImpl(arg0);
+      }
+    }
+
+    private final class UserListFragmentSubcomponentImpl
+        implements MainFragmentBuilderModule_ContributeUserListFragment
+            .UserListFragmentSubcomponent {
+      private UserListFragmentSubcomponentImpl(UserListFragment arg0) {}
+
+      @Override
+      public void inject(UserListFragment arg0) {
+        injectUserListFragment(arg0);
+      }
+
+      @CanIgnoreReturnValue
+      private UserListFragment injectUserListFragment(UserListFragment instance) {
+        DaggerFragment_MembersInjector.injectChildFragmentInjector(
+            instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfFragment());
+        return instance;
+      }
+    }
+
+    private final class ProfileFragmentSubcomponentFactory
+        implements MainFragmentBuilderModule_ContributeProfileFragment.ProfileFragmentSubcomponent
+            .Factory {
+      @Override
+      public MainFragmentBuilderModule_ContributeProfileFragment.ProfileFragmentSubcomponent create(
+          ProfileFragment arg0) {
+        Preconditions.checkNotNull(arg0);
+        return new ProfileFragmentSubcomponentImpl(arg0);
+      }
+    }
+
+    private final class ProfileFragmentSubcomponentImpl
+        implements MainFragmentBuilderModule_ContributeProfileFragment.ProfileFragmentSubcomponent {
+      private ProfileFragmentSubcomponentImpl(ProfileFragment arg0) {}
+
+      @Override
+      public void inject(ProfileFragment arg0) {
+        injectProfileFragment(arg0);
+      }
+
+      @CanIgnoreReturnValue
+      private ProfileFragment injectProfileFragment(ProfileFragment instance) {
+        DaggerFragment_MembersInjector.injectChildFragmentInjector(
+            instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfFragment());
+        ProfileFragment_MembersInjector.injectUserSingleton(
+            instance, DaggerAppComponent.this.userProvider.get());
+        return instance;
+      }
     }
   }
 }

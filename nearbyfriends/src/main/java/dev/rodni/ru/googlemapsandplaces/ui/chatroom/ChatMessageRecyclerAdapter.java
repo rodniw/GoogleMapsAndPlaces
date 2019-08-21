@@ -14,16 +14,20 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata.ChatMessage;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 
+//TODO: refactor be possible to inject the adapter
 public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>{
 
     private ArrayList<ChatMessage> mMessages;
     private ArrayList<User> mUsers;
     private Context mContext;
 
+    @Inject
     public ChatMessageRecyclerAdapter(ArrayList<ChatMessage> messages,
                                       ArrayList<User> users,
                                       Context context) {

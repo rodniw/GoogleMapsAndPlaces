@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.di.auth.registration;
+package dev.rodni.ru.googlemapsandplaces.di.main.listchats;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -9,5 +9,5 @@ import javax.inject.Scope;
 @Scope
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RegistrationScope {
+public @interface ListChatsScope {
 }

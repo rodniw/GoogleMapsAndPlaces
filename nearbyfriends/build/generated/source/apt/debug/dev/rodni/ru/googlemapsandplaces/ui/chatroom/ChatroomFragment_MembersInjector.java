@@ -17,20 +17,16 @@ public final class ChatroomFragment_MembersInjector implements MembersInjector<C
 
   private final Provider<ViewModelProviderFactory> providerFactoryProvider;
 
-  private final Provider<ChatMessageRecyclerAdapter> adapterProvider;
-
   private final Provider<LinearLayoutManager> layoutManagerProvider;
 
   public ChatroomFragment_MembersInjector(
       Provider<DispatchingAndroidInjector<Fragment>> childFragmentInjectorProvider,
       Provider<User> userSingletonProvider,
       Provider<ViewModelProviderFactory> providerFactoryProvider,
-      Provider<ChatMessageRecyclerAdapter> adapterProvider,
       Provider<LinearLayoutManager> layoutManagerProvider) {
     this.childFragmentInjectorProvider = childFragmentInjectorProvider;
     this.userSingletonProvider = userSingletonProvider;
     this.providerFactoryProvider = providerFactoryProvider;
-    this.adapterProvider = adapterProvider;
     this.layoutManagerProvider = layoutManagerProvider;
   }
 
@@ -38,13 +34,11 @@ public final class ChatroomFragment_MembersInjector implements MembersInjector<C
       Provider<DispatchingAndroidInjector<Fragment>> childFragmentInjectorProvider,
       Provider<User> userSingletonProvider,
       Provider<ViewModelProviderFactory> providerFactoryProvider,
-      Provider<ChatMessageRecyclerAdapter> adapterProvider,
       Provider<LinearLayoutManager> layoutManagerProvider) {
     return new ChatroomFragment_MembersInjector(
         childFragmentInjectorProvider,
         userSingletonProvider,
         providerFactoryProvider,
-        adapterProvider,
         layoutManagerProvider);
   }
 
@@ -54,7 +48,6 @@ public final class ChatroomFragment_MembersInjector implements MembersInjector<C
         instance, childFragmentInjectorProvider.get());
     injectUserSingleton(instance, userSingletonProvider.get());
     injectProviderFactory(instance, providerFactoryProvider.get());
-    injectAdapter(instance, adapterProvider.get());
     injectLayoutManager(instance, layoutManagerProvider.get());
   }
 
@@ -65,10 +58,6 @@ public final class ChatroomFragment_MembersInjector implements MembersInjector<C
   public static void injectProviderFactory(
       ChatroomFragment instance, ViewModelProviderFactory providerFactory) {
     instance.providerFactory = providerFactory;
-  }
-
-  public static void injectAdapter(ChatroomFragment instance, ChatMessageRecyclerAdapter adapter) {
-    instance.adapter = adapter;
   }
 
   public static void injectLayoutManager(
