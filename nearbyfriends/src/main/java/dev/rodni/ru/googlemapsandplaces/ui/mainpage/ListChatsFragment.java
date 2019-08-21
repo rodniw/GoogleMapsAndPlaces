@@ -35,22 +35,26 @@ import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLoca
 
 
 public class ListChatsFragment extends DaggerAppCompatActivity implements
-        View.OnClickListener, ChatroomRecyclerAdapter.ChatroomRecyclerClickListener {
+        View.OnClickListener, ListChatsRecyclerAdapter.ChatroomRecyclerClickListener {
     private static final String TAG = "ListChatsFragment";
     private static final String TAG_USER = "TAG_USER";
 
     @Inject @Named("app_user")
     User userSingleton;
+    @Inject
+    ListChatsRecyclerAdapter listChatsRecyclerAdapter;
+    @Inject
+    LinearLayoutManager layoutManager;
 
     //vars
-    private ArrayList<Chatroom> mChatrooms = new ArrayList<>();
-    private Set<String> mChatroomIds = new HashSet<>();
+    private ArrayList<Chatroom> chatrooms = new ArrayList<>();
+    private Set<String> chatroomIds = new HashSet<>();
 
     //recycler view
-    private ChatroomRecyclerAdapter mChatroomRecyclerAdapter;
-    private RecyclerView mChatroomRecyclerView;
+    //private ListChatsRecyclerAdapter listChatsRecyclerAdapter;
+    private RecyclerView chatroomRecyclerView;
 
-    private ListenerRegistration mChatroomEventListener;
+    private ListenerRegistration chatroomEventListener;
 
     private UserLocation userLocation;
 
@@ -63,7 +67,7 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
         setContentView(R.layout.fragment_list_of_chats);
         Log.d(TAG, "onCreate: ");
 
-        mChatroomRecyclerView = findViewById(R.id.chatrooms_recycler_view);
+        chatroomRecyclerView = findViewById(R.id.chatrooms_recycler_view);
 
         findViewById(R.id.fab_create_chatroom).setOnClickListener(this);
 
@@ -88,9 +92,11 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
     private void initChatroomRecyclerView(){
         Log.d(TAG, "initChatroomRecyclerView: ");
         
-        mChatroomRecyclerAdapter = new ChatroomRecyclerAdapter(mChatrooms, this);
-        mChatroomRecyclerView.setAdapter(mChatroomRecyclerAdapter);
-        mChatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //listChatsRecyclerAdapter = new ListChatsRecyclerAdapter();
+        listChatsRecyclerAdapter.setChatroomAdapter(chatrooms, this);
+        chatroomRecyclerView.setAdapter(listChatsRecyclerAdapter);
+        //chatroomRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        chatroomRecyclerView.setLayoutManager(layoutManager);
     }
 
     //we save users location into the firebase database
@@ -125,7 +131,7 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
                 .collection(getString(R.string.collection_chatrooms));
 
         //fetching a data
-        mChatroomEventListener = chatroomsCollection.addSnapshotListener((queryDocumentSnapshots, e) -> {
+        chatroomEventListener = chatroomsCollection.addSnapshotListener((queryDocumentSnapshots, e) -> {
             Log.d(TAG, "onEvent: called.");
             if (e != null) {
                 Log.e(TAG, "onEvent: Listen failed.", e);
@@ -136,13 +142,13 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     Chatroom chatroom = doc.toObject(Chatroom.class);
                     //check if a chat room already exists into the hashset
-                    if(!mChatroomIds.contains(chatroom.getChatroom_id())){
-                        mChatroomIds.add(chatroom.getChatroom_id());
-                        mChatrooms.add(chatroom);
+                    if(!chatroomIds.contains(chatroom.getChatroom_id())){
+                        chatroomIds.add(chatroom.getChatroom_id());
+                        chatrooms.add(chatroom);
                     }
                 }
-                Log.d(TAG, "onEvent: number of chatrooms: " + mChatrooms.size());
-                mChatroomRecyclerAdapter.notifyDataSetChanged();
+                Log.d(TAG, "onEvent: number of chatrooms: " + chatrooms.size());
+                listChatsRecyclerAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -204,7 +210,7 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
     //click listener for dialog's list
     @Override
     public void onChatroomSelected(int position) {
-        //navChatroomFragment(mChatrooms.get(position));
+        //navChatroomFragment(chatrooms.get(position));
     }
 
     //in this method we receive users uid(then to pojo) and by this we ask for the last known location

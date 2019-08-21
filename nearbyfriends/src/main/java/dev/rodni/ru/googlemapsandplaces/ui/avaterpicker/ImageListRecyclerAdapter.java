@@ -13,26 +13,30 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import dev.rodni.ru.googlemapsandplaces.R;
 
+/*
+NOTE: This fragment has its setter method by which its possible to provide dependencies.
+ */
 public class ImageListRecyclerAdapter extends RecyclerView.Adapter<ImageListRecyclerAdapter.ViewHolder>{
 
-    private ArrayList<Integer> mImages;
-    private ImageListRecyclerClickListener mImageListRecyclerClickListener;
-    private Context mContext;
+    private List<Integer> imagesList;
+    private ImageListRecyclerClickListener imageListRecyclerClickListener;
+    private Context context;
 
-    public ImageListRecyclerAdapter(Context context, ArrayList<Integer> images, ImageListRecyclerClickListener imageListRecyclerClickListener) {
-        mContext = context;
-        mImages = images;
-        mImageListRecyclerClickListener = imageListRecyclerClickListener;
-    }
+    /*public ImageListRecyclerAdapter(Context context, ArrayList<Integer> images, ImageListRecyclerClickListener imageListRecyclerClickListener) {
+        context = context;
+        imagesList = images;
+        imageListRecyclerClickListener = imageListRecyclerClickListener;
+    }*/
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_image_list_item, parent, false);
-        final ViewHolder holder = new ViewHolder(view, mImageListRecyclerClickListener);
+        final ViewHolder holder = new ViewHolder(view, imageListRecyclerClickListener);
         return holder;
     }
 
@@ -43,16 +47,24 @@ public class ImageListRecyclerAdapter extends RecyclerView.Adapter<ImageListRecy
                 .placeholder(R.drawable.cartman_cop)
                 .error(R.drawable.cartman_cop);
 
-        Glide.with(mContext)
+        Glide.with(context)
                 .setDefaultRequestOptions(requestOptions)
-                .load(mImages.get(position))
+                .load(imagesList.get(position))
                 .into((holder).image);
     }
 
     @Override
     public int getItemCount() {
-        return mImages.size();
+        return imagesList.size();
     }
+
+    public void setImageListRecycler(Context context, ArrayList<Integer> imagesList, ImageListRecyclerClickListener imageListRecyclerClickListener){
+        this.context = context;
+        this.imagesList = imagesList;
+        this.imageListRecyclerClickListener = imageListRecyclerClickListener;
+        notifyDataSetChanged();
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener

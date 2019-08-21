@@ -13,7 +13,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -67,18 +67,18 @@ dependencies {
 
     // Google Maps Services (needed for directions)
     api 'com.google.maps:google-maps-services:0.2.9'
-    api 'org.slf4j:slf4j-nop:1.7.25'
+    api 'org.slf4j:slf4j-nop:1.7.28'
 
     // Maps utils (required for custom markers)
     def maps_version = '0.5'
     api "com.google.maps.android:android-maps-utils:$maps_version"
 
     // Better dateTime-time support even on older Android versions
-    def threetenabp_version = '1.1.0'
+    def threetenabp_version = '1.2.1'
     api "com.jakewharton.threetenabp:threetenabp:$threetenabp_version"
 
     // Dagger
-    def dagger_version = "2.22"
+    def dagger_version = '2.24'
 //    def dagger_version = "2.16" // version used by google samples
     // Dagger2 core
     api "com.google.dagger:dagger:$dagger_version"

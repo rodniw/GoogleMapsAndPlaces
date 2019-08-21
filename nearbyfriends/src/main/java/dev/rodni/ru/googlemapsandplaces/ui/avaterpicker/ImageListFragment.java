@@ -41,7 +41,7 @@ public class ImageListFragment extends Fragment implements ImageListRecyclerAdap
         mRecyclerView = view.findViewById(R.id.image_list_recyclerview);
 
         getImageResouces();
-        initRecyclerview();
+        //initRecyclerview();
 
         return view;
     }
@@ -56,12 +56,12 @@ public class ImageListFragment extends Fragment implements ImageListRecyclerAdap
         mImageResources.add(R.drawable.tweek);
     }
 
-    private void initRecyclerview(){
-        ImageListRecyclerAdapter mAdapter = new ImageListRecyclerAdapter(getActivity(), mImageResources, this);
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-    }
+    //private void initRecyclerview(){
+    //    ImageListRecyclerAdapter mAdapter = new ImageListRecyclerAdapter(getActivity(), mImageResources, this);
+    //    StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
+    //    mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+    //    mRecyclerView.setAdapter(mAdapter);
+    //}
 
     @Override
     public void onAttach(Context context) {

@@ -6,17 +6,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import dagger.Module;
 import dagger.Provides;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatMessageRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomMessageRecyclerAdapter;
 
 @Module
 public class ChatroomModule {
 
-    //i need to refactor adapters before inject them
-    //@ChatroomScope
-    //@Provides
-    //static ChatMessageRecyclerAdapter provideAdapter() {
-    //    return new ChatMessageRecyclerAdapter();
-    //}
+    @ChatroomScope
+    @Provides
+    static ChatroomMessageRecyclerAdapter provideAdapter() {
+        return new ChatroomMessageRecyclerAdapter();
+    }
 
     //inject layout manager to the chat room fragment recycler view
     @Provides

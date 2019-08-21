@@ -20,6 +20,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.android.support.DaggerFragment;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
@@ -28,8 +30,12 @@ import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLoca
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.MAPVIEW_BUNDLE_KEY;
 
 public class UserListFragment extends DaggerFragment implements OnMapReadyCallback {
-
     private static final String TAG = "UserListFragment";
+
+    @Inject
+    UserListRecyclerAdapter userListRecyclerAdapter;
+    @Inject
+    LinearLayoutManager layoutManager;
 
     //recycler view
     private RecyclerView userListRecyclerView;
@@ -43,9 +49,6 @@ public class UserListFragment extends DaggerFragment implements OnMapReadyCallba
     //lists
     private List<User> usersList = new ArrayList<>();
     private List<UserLocation> usersLocationsList = new ArrayList<>();
-
-    //recycler adapter
-    private UserRecyclerAdapter userRecyclerAdapter;
 
     //simple static get instance method
     public static UserListFragment newInstance(){
@@ -105,9 +108,9 @@ public class UserListFragment extends DaggerFragment implements OnMapReadyCallba
 
     //simple init recycler view
     private void initUserListRecyclerView(){
-        userRecyclerAdapter = new UserRecyclerAdapter(usersList);
-        userListRecyclerView.setAdapter(userRecyclerAdapter);
-        userListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        userListRecyclerAdapter.setUserListAdapter(usersList);
+        userListRecyclerView.setAdapter(userListRecyclerAdapter);
+        userListRecyclerView.setLayoutManager(layoutManager);
     }
 
     //here i save my location into the map

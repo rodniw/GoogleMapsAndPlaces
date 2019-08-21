@@ -12,29 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-
-import javax.inject.Inject;
+import java.util.List;
 
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata.ChatMessage;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 
-//TODO: refactor be possible to inject the adapter
-public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter<ChatMessageRecyclerAdapter.ViewHolder>{
+/*
+NOTE: This fragment has its setter method by which its possible to provide lists and context.
+ */
+public class ChatroomMessageRecyclerAdapter extends RecyclerView.Adapter<ChatroomMessageRecyclerAdapter.ViewHolder>{
 
-    private ArrayList<ChatMessage> mMessages;
-    private ArrayList<User> mUsers;
-    private Context mContext;
-
-    @Inject
-    public ChatMessageRecyclerAdapter(ArrayList<ChatMessage> messages,
-                                      ArrayList<User> users,
-                                      Context context) {
-        this.mMessages = messages;
-        this.mUsers = users;
-        this.mContext = context;
-    }
+    private List<ChatMessage> chatMessages;
+    private List<User> usersList;
+    private Context context;
 
     @NonNull
     @Override
@@ -46,20 +37,27 @@ public class ChatMessageRecyclerAdapter extends RecyclerView.Adapter<ChatMessage
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        if(FirebaseAuth.getInstance().getUid().equals(mMessages.get(position).getUser().getUser_id())){
-            (holder).username.setTextColor(ContextCompat.getColor(mContext, R.color.green1));
+        if(FirebaseAuth.getInstance().getUid().equals(chatMessages.get(position).getUser().getUser_id())){
+            (holder).username.setTextColor(ContextCompat.getColor(context, R.color.green1));
         }
         else{
-            (holder).username.setTextColor(ContextCompat.getColor(mContext, R.color.blue2));
+            (holder).username.setTextColor(ContextCompat.getColor(context, R.color.blue2));
         }
 
-        (holder).username.setText(mMessages.get(position).getUser().getUsername());
-        (holder).message.setText(mMessages.get(position).getMessage());
+        (holder).username.setText(chatMessages.get(position).getUser().getUsername());
+        (holder).message.setText(chatMessages.get(position).getMessage());
     }
 
     @Override
     public int getItemCount() {
-        return mMessages.size();
+        return chatMessages.size();
+    }
+
+    public void setChatMessageAdapter(List<ChatMessage> chatMessages, List<User> usersList, Context context){
+        this.chatMessages = chatMessages;
+        this.usersList = usersList;
+        this.context = context;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder

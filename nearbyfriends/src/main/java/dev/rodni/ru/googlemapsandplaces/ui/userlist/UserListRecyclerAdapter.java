@@ -1,6 +1,5 @@
 package dev.rodni.ru.googlemapsandplaces.ui.userlist;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +13,13 @@ import java.util.List;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 
-public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapter.ViewHolder>{
-    private static final String TAG = "UserRecyclerAdapter";
+/*
+NOTE: This fragment has its setter method by which its possible to provide dependencies.
+ */
+public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecyclerAdapter.ViewHolder>{
+    private static final String TAG = "UserListRecyclerAdapter";
 
     private List<User> users;
-
-    public UserRecyclerAdapter(List<User> users) {
-        Log.d(TAG, "UserRecyclerAdapter: " + users.toString());
-        this.users = users;
-    }
 
     @NonNull
     @Override
@@ -41,6 +38,11 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     @Override
     public int getItemCount() {
         return users.size();
+    }
+
+    public void setUserListAdapter(List<User> users){
+        this.users = users;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

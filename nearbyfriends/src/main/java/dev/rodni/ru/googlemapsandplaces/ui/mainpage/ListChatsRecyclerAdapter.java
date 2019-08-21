@@ -13,33 +13,37 @@ import java.util.ArrayList;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata.Chatroom;
 
-public class ChatroomRecyclerAdapter extends RecyclerView.Adapter<ChatroomRecyclerAdapter.ViewHolder>{
+/*
+NOTE: This fragment has its setter method by which its possible to provide dependencies.
+ */
+public class ListChatsRecyclerAdapter extends RecyclerView.Adapter<ListChatsRecyclerAdapter.ViewHolder>{
 
-    private ArrayList<Chatroom> mChatrooms;
-    private ChatroomRecyclerClickListener mChatroomRecyclerClickListener;
-
-    public ChatroomRecyclerAdapter(ArrayList<Chatroom> chatrooms, ChatroomRecyclerClickListener chatroomRecyclerClickListener) {
-        this.mChatrooms = chatrooms;
-        mChatroomRecyclerClickListener = chatroomRecyclerClickListener;
-    }
+    private ArrayList<Chatroom> chatrooms;
+    private ChatroomRecyclerClickListener chatroomRecyclerClickListener;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_chatroom_list_item, parent, false);
-        final ViewHolder holder = new ViewHolder(view, mChatroomRecyclerClickListener);
+        final ViewHolder holder = new ViewHolder(view, chatroomRecyclerClickListener);
 
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        (holder).chatroomTitle.setText(mChatrooms.get(position).getTitle());
+        (holder).chatroomTitle.setText(chatrooms.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return mChatrooms.size();
+        return chatrooms.size();
+    }
+
+    public void setChatroomAdapter(ArrayList<Chatroom> chatrooms, ChatroomRecyclerClickListener chatroomRecyclerClickListener){
+        this.chatrooms = chatrooms;
+        this.chatroomRecyclerClickListener = chatroomRecyclerClickListener;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements
