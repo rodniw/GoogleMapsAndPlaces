@@ -9,3 +9,5 @@ Inside:
 4. Google maps&directions API.
 5. MVVM and LiveData.
 6. NavigationUI with fragments.
+7. Work with GPS(service, foregroung service).
+8. Resource feature(as Google recommend this for hadling auth state).
