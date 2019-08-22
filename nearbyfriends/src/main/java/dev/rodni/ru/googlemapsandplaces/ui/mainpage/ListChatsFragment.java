@@ -4,10 +4,15 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,13 +33,16 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.DaggerAppCompatActivity;
+import dagger.android.support.DaggerFragment;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata.Chatroom;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 
-
-public class ListChatsFragment extends DaggerAppCompatActivity implements
+//refactored to the fragment
+//i will use navigation here
+public class ListChatsFragment extends DaggerFragment implements
         View.OnClickListener, ListChatsRecyclerAdapter.ChatroomRecyclerClickListener {
     private static final String TAG = "ListChatsFragment";
     private static final String TAG_USER = "TAG_USER";
@@ -45,6 +53,10 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
     ListChatsRecyclerAdapter listChatsRecyclerAdapter;
     @Inject
     LinearLayoutManager layoutManager;
+    @Inject
+    ViewModelProviderFactory providerFactory;
+
+    private ListChatsViewModel viewModel;
 
     //vars
     private ArrayList<Chatroom> chatrooms = new ArrayList<>();
@@ -62,20 +74,33 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
     private FirebaseFirestore mDb;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_list_of_chats);
         Log.d(TAG, "onCreate: ");
-
-        chatroomRecyclerView = findViewById(R.id.chatrooms_recycler_view);
-
-        findViewById(R.id.fab_create_chatroom).setOnClickListener(this);
 
         mDb = FirebaseFirestore.getInstance();
 
         initChatroomRecyclerView();
 
         //Toast.makeText(this, "User: " + userProvider.getUser().getEmail(), Toast.LENGTH_LONG).show();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_list_of_chats, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //bind to the ListChatsViewModel
+        viewModel = new ViewModelProvider(this, providerFactory).get(ListChatsViewModel.class);
+
+        chatroomRecyclerView = view.findViewById(R.id.chatrooms_recycler_view);
+
+        view.findViewById(R.id.fab_create_chatroom).setOnClickListener(this);
     }
 
     //this onClick handles the big plus button which adds a new chat room
@@ -178,7 +203,7 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
             if(task.isSuccessful()){
                 //navChatroomFragment(chatroom);
             }else{
-                View parentLayout = findViewById(R.id.content);
+                View parentLayout = getView().findViewById(R.id.content);
                 Snackbar.make(parentLayout, "Something went wrong.", Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -188,10 +213,10 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
     private void newChatroomDialog(){
         Log.d(TAG, "newChatroomDialog: ");
         
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Enter a chatroom name");
 
-        final EditText input = new EditText(this);
+        final EditText input = new EditText(getActivity());
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
@@ -200,7 +225,7 @@ public class ListChatsFragment extends DaggerAppCompatActivity implements
                 buildNewChatroom(input.getText().toString());
             }
             else {
-                Toast.makeText(ListChatsFragment.this, "Enter a chatroom name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Enter a chatroom name", Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());

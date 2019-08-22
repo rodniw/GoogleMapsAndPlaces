@@ -8,12 +8,13 @@ import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomViewModelsModul
 import dev.rodni.ru.googlemapsandplaces.di.main.listchats.ListChatsModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.listchats.ListChatsScope;
 import dev.rodni.ru.googlemapsandplaces.di.main.listchats.ListChatsViewModelsModule;
+import dev.rodni.ru.googlemapsandplaces.di.main.profile.ProfileModule;
+import dev.rodni.ru.googlemapsandplaces.di.main.profile.ProfileViewModelsModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListScope;
 import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListViewModelsModule;
 import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment;
 import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsViewModel;
 import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment;
 import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
 
@@ -41,6 +42,9 @@ public abstract class MainFragmentBuilderModule {
     })
     abstract UserListFragment contributeUserListFragment();
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = {
+            ProfileModule.class,
+            ProfileViewModelsModule.class,
+    })
     abstract ProfileFragment contributeProfileFragment();
 }

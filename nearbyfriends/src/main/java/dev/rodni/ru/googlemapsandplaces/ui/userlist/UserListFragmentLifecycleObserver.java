@@ -9,6 +9,8 @@ import androidx.lifecycle.OnLifecycleEvent;
 
 import com.google.android.gms.maps.MapView;
 
+import javax.inject.Inject;
+
 import static androidx.lifecycle.Lifecycle.Event.ON_ANY;
 import static androidx.lifecycle.Lifecycle.Event.ON_DESTROY;
 import static androidx.lifecycle.Lifecycle.Event.ON_PAUSE;
@@ -24,7 +26,7 @@ public class UserListFragmentLifecycleObserver implements LifecycleObserver {
     private MapView map;
 
     //di with MapView with the constructor
-    //TODO: use dagger 2 for this
+    @Inject
     public UserListFragmentLifecycleObserver(MapView map) {
         this.map = map;
         Log.d(TAG, "!Contructor!");

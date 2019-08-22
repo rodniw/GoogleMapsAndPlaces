@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -23,12 +24,18 @@ import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.IProfile;
 import dev.rodni.ru.googlemapsandplaces.ui.avaterpicker.ImageListFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragmentLifecycleObserver;
+import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 
 
 public class ProfileFragment extends DaggerFragment implements View.OnClickListener, IProfile {
     private static final String TAG = "ProfileFragment";
 
     @Inject @Named("app_user") User userSingleton;
+    @Inject
+    ViewModelProviderFactory providerFactory;
+
+    private ProfileViewModel viewModel;
 
     //widgets
     private CircleImageView mAvatarImage;
@@ -70,6 +77,8 @@ public class ProfileFragment extends DaggerFragment implements View.OnClickListe
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        viewModel = new ViewModelProvider(this, providerFactory).get(ProfileViewModel.class);
+
         mAvatarImage = view.findViewById(R.id.image_choose_avatar);
 
         view.findViewById(R.id.image_choose_avatar).setOnClickListener(this);

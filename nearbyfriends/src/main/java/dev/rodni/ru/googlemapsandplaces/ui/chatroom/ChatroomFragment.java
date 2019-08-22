@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -97,12 +98,13 @@ public class ChatroomFragment extends DaggerFragment implements View.OnClickList
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        //bind to the view model
+        viewModel = new ViewModelProvider(this, providerFactory).get(ChatroomViewModel.class);
+
         messageEditText = view.findViewById(R.id.input_message);
         chatMessageRecyclerView = view.findViewById(R.id.chatmessage_recycler_view);
 
         view.findViewById(R.id.checkmark).setOnClickListener(this);
-
-        viewModel = ViewModelProviders.of(this, providerFactory).get(ChatroomViewModel.class);
 
         super.onViewCreated(view, savedInstanceState);
     }

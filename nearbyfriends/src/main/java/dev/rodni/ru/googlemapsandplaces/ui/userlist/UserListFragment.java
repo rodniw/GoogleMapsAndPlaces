@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +28,7 @@ import dagger.android.support.DaggerFragment;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.MAPVIEW_BUNDLE_KEY;
 
@@ -36,15 +39,19 @@ public class UserListFragment extends DaggerFragment implements OnMapReadyCallba
     UserListRecyclerAdapter userListRecyclerAdapter;
     @Inject
     LinearLayoutManager layoutManager;
+    @Inject
+    ViewModelProviderFactory providerFactory;
+    @Inject
+    UserListFragmentLifecycleObserver lifecycleObserver;
+
+    private UserListViewModel viewModel;
 
     //recycler view
     private RecyclerView userListRecyclerView;
 
     //map view
-    private MapView mapView;
-
-    //lifecycler observer
-    private UserListFragmentLifecycleObserver lifecycleObserver;
+    @Inject
+    MapView mapView;
 
     //lists
     private List<User> usersList = new ArrayList<>();
@@ -67,20 +74,7 @@ public class UserListFragment extends DaggerFragment implements OnMapReadyCallba
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.fragment_user_list, container, false);
-        userListRecyclerView = view.findViewById(R.id.user_list_recycler_view);
-        mapView = view.findViewById(R.id.user_list_map);
-
-        //initialize the fragment's lifecycle observer and pass there the mapView
-        //to handle its lifecycle callback and reduce code boilerplate
-        //TODO: make this with dagger2
-        lifecycleObserver = new UserListFragmentLifecycleObserver(mapView);
-        getLifecycle().addObserver(lifecycleObserver);
-
-        initUserListRecyclerView();
-
-        initGoogleMap(savedInstanceState);
-
+        //View view  = inflater.inflate(R.layout.fragment_user_list, container, false);
         //checking the list of user's locations
         //for (UserLocation userlocation : usersLocationsList) {
         //    Log.d(TAG, "onCreateView: user location " + userlocation.getUser().getUsername());
@@ -90,8 +84,27 @@ public class UserListFragment extends DaggerFragment implements OnMapReadyCallba
         //                    "\n" +
         //                    userlocation.getGeo_point().getLongitude());
         //}
+        return inflater.inflate(R.layout.fragment_user_list, container, false);
+    }
 
-        return view;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        viewModel = new ViewModelProvider(this, providerFactory).get(UserListViewModel.class);
+
+        userListRecyclerView = view.findViewById(R.id.user_list_recycler_view);
+        mapView = view.findViewById(R.id.user_list_map);
+
+        //initialize the fragment's lifecycle observer and pass there the mapView
+        //to handle its lifecycle callback and reduce code boilerplate
+
+        //lifecycleObserver = new UserListFragmentLifecycleObserver(mapView);
+        getLifecycle().addObserver(lifecycleObserver);
+
+        initUserListRecyclerView();
+
+        initGoogleMap(savedInstanceState);
     }
 
     //this method takes saved bundle and put the point onto the map at the saved place inside onCreateView method
