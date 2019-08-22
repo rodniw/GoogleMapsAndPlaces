@@ -13,10 +13,10 @@ import dev.rodni.ru.googlemapsandplaces.di.main.profile.ProfileViewModelsModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListScope;
 import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListViewModelsModule;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListFragment;
 
 @Module
 public abstract class MainFragmentBuilderModule {

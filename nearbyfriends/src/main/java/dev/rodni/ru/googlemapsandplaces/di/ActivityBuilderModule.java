@@ -2,7 +2,7 @@ package dev.rodni.ru.googlemapsandplaces.di;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import dev.rodni.ru.googlemapsandplaces.MainActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.main.MainActivity;
 import dev.rodni.ru.googlemapsandplaces.di.auth.login.LoginModule;
 import dev.rodni.ru.googlemapsandplaces.di.auth.login.LoginScope;
 import dev.rodni.ru.googlemapsandplaces.di.auth.login.LoginViewModelsModule;
@@ -13,8 +13,8 @@ import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainModule;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainScope;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainViewModelsModule;
-import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
-import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.auth.login.LoginActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.auth.registration.RegisterActivity;
 
 //module to provide subcomponents to my activities by ContributesAndroidInjector
 //and also to set all the activities scopes

@@ -21,18 +21,18 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".ui.mainpage.ListChatsFragment">
+        <activity android:name=".ui.main.mainpage.ListChatsFragment">
         </activity>
-        <activity android:name=".ui.login.LoginActivity" >
+        <activity android:name=".ui.auth.login.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.registration.RegisterActivity" />
-        <activity android:name=".ui.chatroom.ChatroomFragment" />
-        <activity android:name=".ui.profile.ProfileFragment"/>
+        <activity android:name=".ui.auth.registration.RegisterActivity" />
+        <activity android:name=".ui.main.chatroom.ChatroomFragment" />
+        <activity android:name=".ui.main.profile.ProfileFragment"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

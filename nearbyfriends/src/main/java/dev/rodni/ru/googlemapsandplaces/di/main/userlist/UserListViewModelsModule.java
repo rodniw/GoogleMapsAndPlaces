@@ -6,7 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import dev.rodni.ru.googlemapsandplaces.di.ViewModelKey;
-import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListViewModel;
 
 @Module
 public abstract class UserListViewModelsModule {

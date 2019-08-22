@@ -9,6 +9,7 @@ import dagger.Component;
 import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
+import dev.rodni.ru.googlemapsandplaces.SessionManager;
 
 //the main comp
 @Singleton
@@ -19,6 +20,10 @@ import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
         ViewModelFactoryModule.class,
 })
 public interface AppComponent extends AndroidInjector<NearbyFriendsApplication> {
+
+    //by this we provide the session manager through all the application
+    //and its gonna be accessible by any class that will inject it inside the class
+    SessionManager sessionManager();
 
     @Component.Builder
     interface Builder {

@@ -2,7 +2,7 @@ package dev.rodni.ru.googlemapsandplaces.di.main.chatroom;
 
 import dagger.Module;
 import dagger.Provides;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomMessageRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomMessageRecyclerAdapter;
 
 @Module
 public class ChatroomModule {

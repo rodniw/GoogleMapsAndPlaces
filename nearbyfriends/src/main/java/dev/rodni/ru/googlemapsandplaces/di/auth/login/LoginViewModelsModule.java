@@ -6,7 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import dev.rodni.ru.googlemapsandplaces.di.ViewModelKey;
-import dev.rodni.ru.googlemapsandplaces.ui.login.LoginViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.auth.login.LoginViewModel;
 
 @Module
 public abstract class LoginViewModelsModule {

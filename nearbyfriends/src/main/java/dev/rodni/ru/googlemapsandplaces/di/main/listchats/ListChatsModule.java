@@ -2,7 +2,7 @@ package dev.rodni.ru.googlemapsandplaces.di.main.listchats;
 
 import dagger.Module;
 import dagger.Provides;
-import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsRecyclerAdapter;
 
 @Module
 public class ListChatsModule {

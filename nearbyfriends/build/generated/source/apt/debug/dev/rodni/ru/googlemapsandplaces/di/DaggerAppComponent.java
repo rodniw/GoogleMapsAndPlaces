@@ -4,6 +4,7 @@ package dev.rodni.ru.googlemapsandplaces.di;
 import android.app.Application;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import com.google.android.gms.maps.MapView;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import dagger.android.AndroidInjector;
@@ -13,37 +14,47 @@ import dagger.android.DispatchingAndroidInjector_Factory;
 import dagger.android.support.DaggerAppCompatActivity_MembersInjector;
 import dagger.android.support.DaggerFragment_MembersInjector;
 import dagger.internal.DoubleCheck;
+import dagger.internal.InstanceFactory;
 import dagger.internal.Preconditions;
-import dev.rodni.ru.googlemapsandplaces.MainActivity;
 import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
+import dev.rodni.ru.googlemapsandplaces.SessionManager;
+import dev.rodni.ru.googlemapsandplaces.SessionManager_Factory;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeChatroomFragment;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeListChatsFragment;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeProfileFragment;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeUserListFragment;
+import dev.rodni.ru.googlemapsandplaces.di.main.MainModule_ProvideLayoutManagerFactory;
 import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomModule_ProvideAdapterFactory;
-import dev.rodni.ru.googlemapsandplaces.di.main.chatroom.ChatroomModule_ProvideLayoutManagerFactory;
 import dev.rodni.ru.googlemapsandplaces.di.main.listchats.ListChatsModule_ProvideAdapterFactory;
-import dev.rodni.ru.googlemapsandplaces.di.main.listchats.ListChatsModule_ProvideLayoutManagerFactory;
 import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListModule_ProvideAdapterFactory;
-import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListModule_ProvideLayoutManagerFactory;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment_MembersInjector;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomMessageRecyclerAdapter;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomViewModel;
-import dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomViewModel_Factory;
-import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity;
-import dev.rodni.ru.googlemapsandplaces.ui.login.LoginActivity_MembersInjector;
-import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment_MembersInjector;
-import dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsRecyclerAdapter;
-import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment_MembersInjector;
-import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity;
-import dev.rodni.ru.googlemapsandplaces.ui.registration.RegisterActivity_MembersInjector;
-import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment;
-import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment_MembersInjector;
-import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListModule_ProvideLifecyclerObserverFactory;
+import dev.rodni.ru.googlemapsandplaces.di.main.userlist.UserListModule_ProvideMapViewFactory;
+import dev.rodni.ru.googlemapsandplaces.ui.auth.login.LoginActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.auth.login.LoginActivity_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.auth.registration.RegisterActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.auth.registration.RegisterActivity_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.main.MainActivity;
+import dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomFragment_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomMessageRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomViewModel_Factory;
+import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsFragment_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsViewModel_Factory;
+import dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileFragment_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileViewModel_Factory;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListFragment;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListFragmentLifecycleObserver;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListFragment_MembersInjector;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListViewModel_Factory;
 import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 import java.util.Map;
 import javax.inject.Provider;
@@ -61,7 +72,11 @@ public final class DaggerAppComponent implements AppComponent {
 
   private Provider<ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent.Factory> mainActivitySubcomponentFactoryProvider;
 
+  private Provider<SessionManager> sessionManagerProvider;
+
   private Provider<User> userProvider;
+
+  private Provider<Application> applicationProvider;
 
   private DaggerAppComponent(Application applicationParam) {
     this.application = applicationParam;
@@ -97,12 +112,18 @@ public final class DaggerAppComponent implements AppComponent {
       public ActivityBuilderModule_ContributeMainActivity.MainActivitySubcomponent.Factory get() {
         return new MainActivitySubcomponentFactory();}
     };
+    this.sessionManagerProvider = DoubleCheck.provider(SessionManager_Factory.create());
     this.userProvider = DoubleCheck.provider(AppModule_UserFactory.create());
+    this.applicationProvider = InstanceFactory.create(applicationParam);
   }
 
   @Override
   public void inject(NearbyFriendsApplication arg0) {
     injectNearbyFriendsApplication(arg0);}
+
+  @Override
+  public SessionManager sessionManager() {
+    return sessionManagerProvider.get();}
 
   @CanIgnoreReturnValue
   private NearbyFriendsApplication injectNearbyFriendsApplication(
@@ -208,6 +229,9 @@ public final class DaggerAppComponent implements AppComponent {
     private DispatchingAndroidInjector<Object> getDispatchingAndroidInjectorOfObject() {
       return DispatchingAndroidInjector_Factory.newInstance(getMapOfClassOfAndProviderOfAndroidInjectorFactoryOf(), ImmutableMap.<String, Provider<AndroidInjector.Factory<?>>>of());}
 
+    private LinearLayoutManager getLinearLayoutManager() {
+      return MainModule_ProvideLayoutManagerFactory.provideLayoutManager(DaggerAppComponent.this.application);}
+
     @SuppressWarnings("unchecked")
     private void initialize(final MainActivity arg0) {
       this.listChatsFragmentSubcomponentFactoryProvider = new Provider<MainFragmentBuilderModule_ContributeListChatsFragment.ListChatsFragmentSubcomponent.Factory>() {
@@ -263,8 +287,12 @@ public final class DaggerAppComponent implements AppComponent {
         initialize(arg0);
       }
 
-      private LinearLayoutManager getLinearLayoutManager() {
-        return ListChatsModule_ProvideLayoutManagerFactory.provideLayoutManager(DaggerAppComponent.this.application);}
+      private Map<Class<? extends ViewModel>, Provider<ViewModel>> getMapOfClassOfAndProviderOfViewModel(
+          ) {
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ListChatsViewModel.class, (Provider) ListChatsViewModel_Factory.create());}
+
+      private ViewModelProviderFactory getViewModelProviderFactory() {
+        return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}
 
       @SuppressWarnings("unchecked")
       private void initialize(final ListChatsFragment arg0) {
@@ -277,10 +305,11 @@ public final class DaggerAppComponent implements AppComponent {
 
       @CanIgnoreReturnValue
       private ListChatsFragment injectListChatsFragment(ListChatsFragment instance) {
-        DaggerAppCompatActivity_MembersInjector.injectAndroidInjector(instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfObject());
+        DaggerFragment_MembersInjector.injectAndroidInjector(instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfObject());
         ListChatsFragment_MembersInjector.injectUserSingleton(instance, DaggerAppComponent.this.userProvider.get());
         ListChatsFragment_MembersInjector.injectListChatsRecyclerAdapter(instance, provideAdapterProvider.get());
-        ListChatsFragment_MembersInjector.injectLayoutManager(instance, getLinearLayoutManager());
+        ListChatsFragment_MembersInjector.injectLayoutManager(instance, MainActivitySubcomponentImpl.this.getLinearLayoutManager());
+        ListChatsFragment_MembersInjector.injectProviderFactory(instance, getViewModelProviderFactory());
         return instance;
       }
     }
@@ -309,9 +338,6 @@ public final class DaggerAppComponent implements AppComponent {
       private ViewModelProviderFactory getViewModelProviderFactory() {
         return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}
 
-      private LinearLayoutManager getLinearLayoutManager() {
-        return ChatroomModule_ProvideLayoutManagerFactory.provideLayoutManager(DaggerAppComponent.this.application);}
-
       @SuppressWarnings("unchecked")
       private void initialize(final ChatroomFragment arg0) {
         this.provideAdapterProvider = DoubleCheck.provider(ChatroomModule_ProvideAdapterFactory.create());
@@ -327,7 +353,7 @@ public final class DaggerAppComponent implements AppComponent {
         ChatroomFragment_MembersInjector.injectUserSingleton(instance, DaggerAppComponent.this.userProvider.get());
         ChatroomFragment_MembersInjector.injectProviderFactory(instance, getViewModelProviderFactory());
         ChatroomFragment_MembersInjector.injectAdapter(instance, provideAdapterProvider.get());
-        ChatroomFragment_MembersInjector.injectLayoutManager(instance, getLinearLayoutManager());
+        ChatroomFragment_MembersInjector.injectLayoutManager(instance, MainActivitySubcomponentImpl.this.getLinearLayoutManager());
         return instance;
       }
     }
@@ -344,17 +370,27 @@ public final class DaggerAppComponent implements AppComponent {
     private final class UserListFragmentSubcomponentImpl implements MainFragmentBuilderModule_ContributeUserListFragment.UserListFragmentSubcomponent {
       private Provider<UserListRecyclerAdapter> provideAdapterProvider;
 
+      private Provider<MapView> provideMapViewProvider;
+
+      private Provider<UserListFragmentLifecycleObserver> provideLifecyclerObserverProvider;
+
       private UserListFragmentSubcomponentImpl(UserListFragment arg0) {
 
         initialize(arg0);
       }
 
-      private LinearLayoutManager getLinearLayoutManager() {
-        return UserListModule_ProvideLayoutManagerFactory.provideLayoutManager(DaggerAppComponent.this.application);}
+      private Map<Class<? extends ViewModel>, Provider<ViewModel>> getMapOfClassOfAndProviderOfViewModel(
+          ) {
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(UserListViewModel.class, (Provider) UserListViewModel_Factory.create());}
+
+      private ViewModelProviderFactory getViewModelProviderFactory() {
+        return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}
 
       @SuppressWarnings("unchecked")
       private void initialize(final UserListFragment arg0) {
         this.provideAdapterProvider = DoubleCheck.provider(UserListModule_ProvideAdapterFactory.create());
+        this.provideMapViewProvider = DoubleCheck.provider(UserListModule_ProvideMapViewFactory.create(DaggerAppComponent.this.applicationProvider));
+        this.provideLifecyclerObserverProvider = DoubleCheck.provider(UserListModule_ProvideLifecyclerObserverFactory.create(provideMapViewProvider));
       }
 
       @Override
@@ -365,7 +401,10 @@ public final class DaggerAppComponent implements AppComponent {
       private UserListFragment injectUserListFragment(UserListFragment instance) {
         DaggerFragment_MembersInjector.injectAndroidInjector(instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfObject());
         UserListFragment_MembersInjector.injectUserListRecyclerAdapter(instance, provideAdapterProvider.get());
-        UserListFragment_MembersInjector.injectLayoutManager(instance, getLinearLayoutManager());
+        UserListFragment_MembersInjector.injectLayoutManager(instance, MainActivitySubcomponentImpl.this.getLinearLayoutManager());
+        UserListFragment_MembersInjector.injectProviderFactory(instance, getViewModelProviderFactory());
+        UserListFragment_MembersInjector.injectLifecycleObserver(instance, provideLifecyclerObserverProvider.get());
+        UserListFragment_MembersInjector.injectMapView(instance, provideMapViewProvider.get());
         return instance;
       }
     }
@@ -384,6 +423,13 @@ public final class DaggerAppComponent implements AppComponent {
 
       }
 
+      private Map<Class<? extends ViewModel>, Provider<ViewModel>> getMapOfClassOfAndProviderOfViewModel(
+          ) {
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ProfileViewModel.class, (Provider) ProfileViewModel_Factory.create());}
+
+      private ViewModelProviderFactory getViewModelProviderFactory() {
+        return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}
+
       @Override
       public void inject(ProfileFragment arg0) {
         injectProfileFragment(arg0);}
@@ -392,6 +438,7 @@ public final class DaggerAppComponent implements AppComponent {
       private ProfileFragment injectProfileFragment(ProfileFragment instance) {
         DaggerFragment_MembersInjector.injectAndroidInjector(instance, MainActivitySubcomponentImpl.this.getDispatchingAndroidInjectorOfObject());
         ProfileFragment_MembersInjector.injectUserSingleton(instance, DaggerAppComponent.this.userProvider.get());
+        ProfileFragment_MembersInjector.injectProviderFactory(instance, getViewModelProviderFactory());
         return instance;
       }
     }

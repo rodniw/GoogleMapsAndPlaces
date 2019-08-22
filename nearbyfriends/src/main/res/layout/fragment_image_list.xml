@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.avaterpicker.ImageListFragment"
+    tools:context=".ui.main.avaterpicker.ImageListFragment"
     android:background="@color/White">
 
     <androidx.recyclerview.widget.RecyclerView

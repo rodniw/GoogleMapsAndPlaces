@@ -6,7 +6,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import dev.rodni.ru.googlemapsandplaces.di.ViewModelKey;
-import dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileViewModel;
+import dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileViewModel;
 
 @Module
 public abstract class ProfileViewModelsModule {

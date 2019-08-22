@@ -6,8 +6,8 @@ import com.google.android.gms.maps.MapView;
 
 import dagger.Module;
 import dagger.Provides;
-import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragmentLifecycleObserver;
-import dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListRecyclerAdapter;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListFragmentLifecycleObserver;
+import dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListRecyclerAdapter;
 
 @Module
 public class UserListModule {

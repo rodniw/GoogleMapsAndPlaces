@@ -7,14 +7,14 @@
 
     <fragment
         android:id="@+id/listChatsScreen"
-        android:name="dev.rodni.ru.googlemapsandplaces.ui.mainpage.ListChatsFragment"
+        android:name="dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsFragment"
         android:label="List of chats"
         tools:layout="@layout/fragment_list_of_chats"
         />
 
     <fragment
         android:id="@+id/chatroomScreen"
-        android:name="dev.rodni.ru.googlemapsandplaces.ui.chatroom.ChatroomFragment"
+        android:name="dev.rodni.ru.googlemapsandplaces.ui.main.chatroom.ChatroomFragment"
         android:label="Chat room"
         tools:layout="@layout/fragment_chatroom">
         <action
@@ -24,13 +24,13 @@
 
     <fragment
         android:id="@+id/userListScreen"
-        android:name="dev.rodni.ru.googlemapsandplaces.ui.userlist.UserListFragment"
+        android:name="dev.rodni.ru.googlemapsandplaces.ui.main.userlist.UserListFragment"
         android:label="Chat users"
         tools:layout="@layout/fragment_user_list"/>
 
     <fragment
         android:id="@+id/userProfileScreen"
-        android:name="dev.rodni.ru.googlemapsandplaces.ui.profile.ProfileFragment"
+        android:name="dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile"/>
 
