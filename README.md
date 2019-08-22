@@ -1,3 +1,11 @@
-These repo contains code samples with maps workout. I use Google maps and Yandex maps.
+These repo contains code samples with maps workout. I use Google maps&directions Api.
 
-PROJECT STATUS: At the start point.
+PROJECT STATUS: refactoring the skeleton from the old style code(smth like requests from the activity).
+
+Inside:
+1. Dagger 2.
+2. RxJava2.
+3. Firebase.
+4. Google maps&directions API.
+5. MVVM and LiveData.
+6. NavigationUI with fragments.
