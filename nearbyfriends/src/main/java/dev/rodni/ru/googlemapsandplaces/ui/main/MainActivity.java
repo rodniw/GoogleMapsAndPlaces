@@ -21,15 +21,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.GeoPoint;
 
-import dagger.android.support.DaggerAppCompatActivity;
+import dev.rodni.ru.googlemapsandplaces.BaseActivity;
 import dev.rodni.ru.googlemapsandplaces.R;
 import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.services.LocationService;
@@ -40,11 +48,15 @@ import static dev.rodni.ru.googlemapsandplaces.util.Constants.ERROR_DIALOG_REQUE
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static dev.rodni.ru.googlemapsandplaces.util.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
-public class MainActivity extends DaggerAppCompatActivity {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "MainActivity";
 
     //view
     private ProgressBar mProgressBar;
+
+    //
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     //the var for location permission
     private boolean mLocationPermissionGranted = false;
@@ -54,14 +66,67 @@ public class MainActivity extends DaggerAppCompatActivity {
     private UserLocation userLocation;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        init();
+
         mProgressBar = findViewById(R.id.progressBar);
         //initialize fused location client from the system services
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         initSupportActionBar();
+    }
+
+    //method from superclass to init layout
+    @Override
+    protected int layoutRes() {
+        return R.layout.activity_main;
+    }
+
+    private void init(){
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController);
+        NavigationUI.setupWithNavController(navigationView, navController);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        //switch (menuItem.getItemId()) {
+        //    case R.id.nav:
+        //        NavOptions navOptions = new NavOptions.Builder()
+        //                .setPopUpTo(R.id.main, true)
+        //                .build();
+        //        Navigation.findNavController(this, R.id.nav_host_fragment)
+        //                .navigate(
+        //                        R.id.profileScreen,
+        //                        null,
+        //                        navOptions);
+        //        break;
+        //    case R.id.nav_posts:
+        //        if (isValidDestination(R.id.postsScreen)) {
+        //            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.postsScreen);
+        //        }
+        //        break;
+        //}
+
+        //menuItem.setChecked(true);
+        //drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private boolean isValidDestination(int destination){
+        return destination != Navigation.findNavController(this, R.id.nav_host_fragment).getCurrentDestination().getId();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(Navigation.findNavController(this, R.id.nav_host_fragment), drawerLayout);
     }
 
     //work with the action bar

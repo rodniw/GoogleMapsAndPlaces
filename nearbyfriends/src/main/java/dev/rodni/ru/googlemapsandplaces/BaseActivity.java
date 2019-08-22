@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.util;
+package dev.rodni.ru.googlemapsandplaces;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
-import dev.rodni.ru.googlemapsandplaces.SessionManager;
 import dev.rodni.ru.googlemapsandplaces.ui.auth.AuthActivity;
 
 //now i can simply extend this activity and i will not care about auth state anymore
