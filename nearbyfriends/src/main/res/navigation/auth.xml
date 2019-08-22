@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth"
+    app:startDestination="@id/loginScreen">
+
+    <fragment
+        android:id="@+id/loginScreen"
+        android:name="dev.rodni.ru.googlemapsandplaces.ui.auth.login.LoginActivity"
+        android:label="Log in"
+        tools:layout="@layout/fragment_login"
+        />
+
+    <fragment
+        android:id="@+id/registrScreen"
+        android:name="dev.rodni.ru.googlemapsandplaces.ui.auth.registration.RegisterActivity"
+        android:label="Registration"
+        tools:layout="@layout/fragment_register"
+        />
+
+</navigation>

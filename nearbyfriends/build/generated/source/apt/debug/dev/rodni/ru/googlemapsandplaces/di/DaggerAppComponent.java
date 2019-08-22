@@ -16,6 +16,7 @@ import dagger.android.support.DaggerFragment_MembersInjector;
 import dagger.internal.DoubleCheck;
 import dagger.internal.InstanceFactory;
 import dagger.internal.Preconditions;
+import dev.rodni.ru.googlemapsandplaces.BaseActivity_MembersInjector;
 import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
 import dev.rodni.ru.googlemapsandplaces.SessionManager;
 import dev.rodni.ru.googlemapsandplaces.SessionManager_Factory;
@@ -267,6 +268,7 @@ public final class DaggerAppComponent implements AppComponent {
     @CanIgnoreReturnValue
     private MainActivity injectMainActivity(MainActivity instance) {
       DaggerAppCompatActivity_MembersInjector.injectAndroidInjector(instance, getDispatchingAndroidInjectorOfObject());
+      BaseActivity_MembersInjector.injectSessionManager(instance, DaggerAppComponent.this.sessionManagerProvider.get());
       return instance;
     }
 

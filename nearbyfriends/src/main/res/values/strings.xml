@@ -50,8 +50,12 @@
     <string name="action_chatroom_user_list">User list</string>
     <string name="action_profile">Profile</string>
     <string name="chatroom_name">Chatroom name</string>
-    <string name="new_message">new message...</string>
+    <string name="new_message">new message…</string>
     <string name="choose_an_avatar">Choose an avatar</string>
+    <string name="login_text">Войти</string>
+    <string name="registration_text">Регистрация</string>
+    <string name="log_in_text">Log in</string>
+    <string name="register_text">Register</string>
 
 
 </resources>
