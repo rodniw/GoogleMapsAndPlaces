@@ -5,8 +5,8 @@ import androidx.room.RoomDatabase;
 
 import dev.rodni.ru.googlemapsandplaces.data.database.daos.UserDao;
 import dev.rodni.ru.googlemapsandplaces.data.database.daos.UserLocationDao;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.UserLocation;
 
 @Database(
         entities = {User.class, UserLocation.class},

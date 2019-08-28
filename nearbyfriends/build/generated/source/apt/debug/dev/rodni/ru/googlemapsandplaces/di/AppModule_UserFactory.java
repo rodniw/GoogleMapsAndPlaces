@@ -3,7 +3,7 @@ package dev.rodni.ru.googlemapsandplaces.di;
 
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 
 @SuppressWarnings({
     "unchecked",

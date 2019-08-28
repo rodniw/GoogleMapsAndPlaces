@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 
 /*
 NOTE: This fragment has its setter method by which its possible to provide dependencies.

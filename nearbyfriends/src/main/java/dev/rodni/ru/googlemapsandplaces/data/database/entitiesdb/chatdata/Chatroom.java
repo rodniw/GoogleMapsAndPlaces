@@ -1,8 +1,9 @@
-package dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata;
+package dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.chatdata;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+//TODO: refactor to db entity
 public class Chatroom implements Parcelable {
 
     private String title;

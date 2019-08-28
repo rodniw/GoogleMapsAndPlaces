@@ -21,10 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
@@ -32,14 +30,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.GeoPoint;
 
 import dev.rodni.ru.googlemapsandplaces.BaseActivity;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.UserLocation;
 import dev.rodni.ru.googlemapsandplaces.services.LocationService;
 import dev.rodni.ru.googlemapsandplaces.ui.auth.login.LoginActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.main.profile.ProfileFragment;

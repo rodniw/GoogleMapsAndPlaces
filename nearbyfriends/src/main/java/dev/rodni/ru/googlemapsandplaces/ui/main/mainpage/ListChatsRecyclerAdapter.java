@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata.Chatroom;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.chatdata.Chatroom;
 
 /*
 NOTE: This fragment has its setter method by which its possible to provide dependencies.

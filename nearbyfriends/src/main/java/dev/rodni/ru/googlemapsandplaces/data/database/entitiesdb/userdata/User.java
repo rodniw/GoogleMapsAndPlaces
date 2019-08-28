@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata;
+package dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata;
 
 import android.os.Parcel;
 import android.os.Parcelable;

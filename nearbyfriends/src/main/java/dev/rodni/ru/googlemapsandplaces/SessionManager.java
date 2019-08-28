@@ -8,7 +8,7 @@ import androidx.lifecycle.MediatorLiveData;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.auth.AuthResource;
 
 //By this class i will handle users login status in that classes where i will inject

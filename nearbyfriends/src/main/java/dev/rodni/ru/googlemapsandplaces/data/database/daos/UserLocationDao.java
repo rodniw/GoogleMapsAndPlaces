@@ -7,7 +7,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.UserLocation;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.UserLocation;
 
 @Dao
 public interface UserLocationDao {

@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.auth.registration.RegisterActivity;
 import dev.rodni.ru.googlemapsandplaces.ui.main.mainpage.ListChatsFragment;
 

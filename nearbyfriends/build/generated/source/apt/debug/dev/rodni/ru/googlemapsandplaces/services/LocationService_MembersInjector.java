@@ -2,7 +2,7 @@
 package dev.rodni.ru.googlemapsandplaces.services;
 
 import dagger.MembersInjector;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 import javax.inject.Provider;
 
 @SuppressWarnings({

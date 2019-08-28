@@ -1,8 +1,9 @@
-package dev.rodni.ru.googlemapsandplaces.data.database.entities;
+package dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb;
 
 import com.google.android.gms.maps.model.Polyline;
 import com.google.maps.model.DirectionsLeg;
 
+//TODO: refactor to db entity
 public class PolylineData {
 
     private Polyline polyline;

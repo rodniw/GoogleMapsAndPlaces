@@ -1,10 +1,11 @@
-package dev.rodni.ru.googlemapsandplaces.data.database.entities;
+package dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 
+//TODO: refactor to db entity
 public class ClusterMarker implements ClusterItem {
 
     private LatLng position; // required field

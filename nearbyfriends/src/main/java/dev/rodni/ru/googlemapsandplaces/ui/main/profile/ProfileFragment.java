@@ -21,7 +21,7 @@ import javax.inject.Named;
 import dagger.android.support.DaggerFragment;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.main.avaterpicker.ImageListFragment;
 import dev.rodni.ru.googlemapsandplaces.util.viewmodels.ViewModelProviderFactory;
 

@@ -1,11 +1,12 @@
-package dev.rodni.ru.googlemapsandplaces.data.database.entities.chatdata;
+package dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.chatdata;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 
+//TODO: refactor to db entity
 public class ChatMessage {
 
     private User user;

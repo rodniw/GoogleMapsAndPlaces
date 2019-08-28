@@ -1,4 +1,4 @@
-package dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata;
+package dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,8 +10,6 @@ import androidx.room.PrimaryKey;
 
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ServerTimestamp;
-
-import org.threeten.bp.ZonedDateTime;
 
 import java.util.Date;
 

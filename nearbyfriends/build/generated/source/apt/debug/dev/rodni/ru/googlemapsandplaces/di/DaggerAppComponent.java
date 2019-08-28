@@ -20,7 +20,7 @@ import dev.rodni.ru.googlemapsandplaces.BaseActivity_MembersInjector;
 import dev.rodni.ru.googlemapsandplaces.NearbyFriendsApplication;
 import dev.rodni.ru.googlemapsandplaces.SessionManager;
 import dev.rodni.ru.googlemapsandplaces.SessionManager_Factory;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeChatroomFragment;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeListChatsFragment;
 import dev.rodni.ru.googlemapsandplaces.di.main.MainFragmentBuilderModule_ContributeProfileFragment;
@@ -291,7 +291,7 @@ public final class DaggerAppComponent implements AppComponent {
 
       private Map<Class<? extends ViewModel>, Provider<ViewModel>> getMapOfClassOfAndProviderOfViewModel(
           ) {
-        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ListChatsViewModel.class, (Provider) ListChatsViewModel_Factory.create());}
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ChatroomViewModel.class, (Provider) ChatroomViewModel_Factory.create(), ListChatsViewModel.class, (Provider) ListChatsViewModel_Factory.create(), ProfileViewModel.class, (Provider) ProfileViewModel_Factory.create(), UserListViewModel.class, (Provider) UserListViewModel_Factory.create());}
 
       private ViewModelProviderFactory getViewModelProviderFactory() {
         return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}
@@ -335,7 +335,7 @@ public final class DaggerAppComponent implements AppComponent {
 
       private Map<Class<? extends ViewModel>, Provider<ViewModel>> getMapOfClassOfAndProviderOfViewModel(
           ) {
-        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ChatroomViewModel.class, (Provider) ChatroomViewModel_Factory.create());}
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ChatroomViewModel.class, (Provider) ChatroomViewModel_Factory.create(), ListChatsViewModel.class, (Provider) ListChatsViewModel_Factory.create(), ProfileViewModel.class, (Provider) ProfileViewModel_Factory.create(), UserListViewModel.class, (Provider) UserListViewModel_Factory.create());}
 
       private ViewModelProviderFactory getViewModelProviderFactory() {
         return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}
@@ -383,7 +383,7 @@ public final class DaggerAppComponent implements AppComponent {
 
       private Map<Class<? extends ViewModel>, Provider<ViewModel>> getMapOfClassOfAndProviderOfViewModel(
           ) {
-        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(UserListViewModel.class, (Provider) UserListViewModel_Factory.create());}
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ChatroomViewModel.class, (Provider) ChatroomViewModel_Factory.create(), ListChatsViewModel.class, (Provider) ListChatsViewModel_Factory.create(), ProfileViewModel.class, (Provider) ProfileViewModel_Factory.create(), UserListViewModel.class, (Provider) UserListViewModel_Factory.create());}
 
       private ViewModelProviderFactory getViewModelProviderFactory() {
         return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}
@@ -427,7 +427,7 @@ public final class DaggerAppComponent implements AppComponent {
 
       private Map<Class<? extends ViewModel>, Provider<ViewModel>> getMapOfClassOfAndProviderOfViewModel(
           ) {
-        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ProfileViewModel.class, (Provider) ProfileViewModel_Factory.create());}
+        return ImmutableMap.<Class<? extends ViewModel>, Provider<ViewModel>>of(ChatroomViewModel.class, (Provider) ChatroomViewModel_Factory.create(), ListChatsViewModel.class, (Provider) ListChatsViewModel_Factory.create(), ProfileViewModel.class, (Provider) ProfileViewModel_Factory.create(), UserListViewModel.class, (Provider) UserListViewModel_Factory.create());}
 
       private ViewModelProviderFactory getViewModelProviderFactory() {
         return new ViewModelProviderFactory(getMapOfClassOfAndProviderOfViewModel());}

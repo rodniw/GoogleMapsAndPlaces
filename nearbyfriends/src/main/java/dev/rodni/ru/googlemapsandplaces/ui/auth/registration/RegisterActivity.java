@@ -22,7 +22,7 @@ import javax.inject.Named;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import dev.rodni.ru.googlemapsandplaces.R;
-import dev.rodni.ru.googlemapsandplaces.data.database.entities.userdata.User;
+import dev.rodni.ru.googlemapsandplaces.data.database.entitiesdb.userdata.User;
 import dev.rodni.ru.googlemapsandplaces.ui.auth.login.LoginActivity;
 
 import static android.text.TextUtils.isEmpty;
